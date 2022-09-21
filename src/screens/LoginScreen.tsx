@@ -53,6 +53,7 @@ export default function LoginScreen({route, navigation}: CompositeScreenProps<an
                 onPress={async () => {
                     console.log("LoginScreen - Logging in with password", password)
                     const walName = "Wallet Name"
+                    navigation.navigate("mainTabs")
                 }}
             />
             <Text></Text>
