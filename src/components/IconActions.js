@@ -2,7 +2,7 @@ import React from 'react';
 import {View} from 'react-native';
 import {IconButton} from 'react-native-paper';
 
-import {asContactShareable, getContactByAlias, showRel} from '../relationships';
+// import {asContactShareable, getContactByAlias, showRel} from '../relationships';
 
 export default function IconActions(...props) {
 //  console.log("IconActions - props",props)
@@ -24,7 +24,8 @@ export default function IconActions(...props) {
                 icon="account"
                 size={28}
                 color="#e69138"
-                onPress={() => showRel(navigation, asContactShareable(getContactByAlias(person)))}
+                // onPress={() => showRel(navigation, asContactShareable(getContactByAlias(person)))}
+                onPress={() => console.log('onPress clicked')}
             />
             <IconButton
                 icon="qrcode-scan"

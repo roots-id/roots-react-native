@@ -1,6 +1,5 @@
 import React from 'react';
 import { Image, Text, View } from 'react-native';
-import * as utils from "../utils";
 
 export default function LogoTitle(...props) {
 //    <React.Fragment>
@@ -17,7 +16,7 @@ export default function LogoTitle(...props) {
         <View style={{flexDirection:'row'}}>
             {getLogo()}
             <Text style={{ color: '#eeeeee',fontSize: 22,fontWeight: 'normal',textAlignVertical: "center",textAlign: "center", }}>
-                {utils.getTitle(props[0]["title"],10)}
+                {props[0]["title"]}
             </Text>
         </View>
   );

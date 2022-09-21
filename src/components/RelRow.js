@@ -1,8 +1,8 @@
 import React from 'react';
 import { Image, SafeAreaView, TouchableOpacity} from 'react-native';
 import { List } from 'react-native-paper';
-import {asContactShareable, getCurrentUserContact, showRel} from '../relationships'
-import { getChatItem } from '../roots'
+// import {asContactShareable, getCurrentUserContact, showRel} from '../relationships'
+// import { getChatItem } from '../roots'
 import {styles} from "../styles/styles";
 
 export default function RelRow(...props) {
@@ -21,8 +21,11 @@ export default function RelRow(...props) {
   return (
   <React.Fragment>
         <SafeAreaView>
-        <TouchableOpacity onPress={() => showRel(navigation,asContactShareable(item))}>
-            <Image source={item.displayPictureUrl}
+        <TouchableOpacity
+          // onPress={() => showRel(navigation,asContactShareable(item))}
+          onPress={() => console.log('clicked')}
+        >
+            <Image source={{ uri: 'https://avatars.githubusercontent.com/u/95590918?s=200&v=4'}}
                 style={{
                   width:65,
                   height:75,
@@ -39,7 +42,7 @@ export default function RelRow(...props) {
           titleStyle={styles.clickableListTitle}
           descriptionStyle={styles.listDescription}
           descriptionNumberOfLines={1}
-          onPress={() => navigation.navigate('Chat', { chatId: getChatItem(item.id).id })}
+          // onPress={() => navigation.navigate('Chat', { chatId: getChatItem(item.id).id })}
         />
         </SafeAreaView>
     </React.Fragment>
