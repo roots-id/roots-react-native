@@ -2,6 +2,9 @@ import { StatusBar } from 'expo-status-bar';
 import {DefaultTheme, Provider as PaperProvider} from 'react-native-paper';
 import Providers from "./src/navigation";
 
+// @ts-ignore
+console.disableYellowBox = true;
+
 export default function App() {
     console.log("Starting App")
   return (
