@@ -25,7 +25,7 @@ export default function RelRow(...props) {
           // onPress={() => showRel(navigation,asContactShareable(item))}
           onPress={() => console.log('clicked')}
         >
-            <Image source={{ uri: 'https://avatars.githubusercontent.com/u/95590918?s=200&v=4'}}
+            <Image source={{ uri: item.displayPictureUrl }}
                 style={{
                   width:65,
                   height:75,
