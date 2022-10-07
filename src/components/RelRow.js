@@ -42,7 +42,7 @@ export default function RelRow(...props) {
           titleStyle={styles.clickableListTitle}
           descriptionStyle={styles.listDescription}
           descriptionNumberOfLines={1}
-          // onPress={() => navigation.navigate('Chat', { chatId: getChatItem(item.id).id })}
+          onPress={() => navigation.navigate('Chat', { user: item })}
         />
         </SafeAreaView>
     </React.Fragment>
