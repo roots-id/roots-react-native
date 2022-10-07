@@ -1,5 +1,5 @@
 # roots-react-native
-Work done by Snapbrillia participants to get our complex mobile app replicated into a simpler UI-only repo so that we can do future Gigs to iterate quickly to change the front-end.
+UI development to transition our complex mobile app UI/Logic/Storage/Frameworks/Native-code, into a simpler UI-only repo so that we can iterate quickly UI/UX changes.
 
 ## Requirements:
 * Must be able to run it with yarn on android, ios, and web
