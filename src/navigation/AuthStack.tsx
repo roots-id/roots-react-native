@@ -14,6 +14,7 @@ import RelationshipsScreen from '../screens/RelationshipsScreen';
 import CredentialsScreen from '../screens/CredentialsScreen';
 import DeveloperScreen from '../screens/DeveloperScreen';
 import WalletScreen from '../screens/WalletScreen';
+import ChatScreen from '../screens/ChatScreen';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -81,17 +82,24 @@ export default function AuthStack() {
               ),
             })}
           />
-          {/* <Stack.Screen
-                        name="Chat"
-                        component={ChatScreen}
-                        options={({navigation, route}) => ({
-                            headerTitle: (props) => <SimpleTitle {...props}
-                                                                 title={getChatItem(utils.getObjectField(route.params, "chatId")).title}/>,
-                            headerRight: (props) => <IconActions {...props} nav={navigation} add="Create Rel"
-                                                                 person={'user-id-1'} scan='credential'
-                                                                 settings='Settings'/>,
-                        })}
-                    /> */}
+          <Stack.Screen
+            name='Chat'
+            component={ChatScreen}
+            options={({ navigation, route }) => ({
+              headerBackTitle: route.params?.user?.displayName,
+              headerTitle: (props) => null,
+              headerRight: (props) => (
+                <IconActions
+                  {...props}
+                  nav={navigation}
+                  add='Create Rel'
+                  person={'user-id-1'}
+                  scan='credential'
+                  settings='Settings'
+                />
+              ),
+            })}
+          />
         </Stack.Group>
       </Stack.Navigator>
     );

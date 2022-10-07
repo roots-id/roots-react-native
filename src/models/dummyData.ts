@@ -120,3 +120,44 @@ export const SESSION_STATUS = {
     end: 'dummy_end',
     error: 'dummy_error',
 }
+
+export const DUMMY_CONTACTS = [
+    {
+      id: 'user_1',
+      displayPictureUrl:
+        'https://dt2sdf0db8zob.cloudfront.net/wp-content/uploads/2019/12/9-Best-Online-Avatars-and-How-to-Make-Your-Own-for-Free-image1-5.png',
+      displayName: 'Guest',
+    },
+    {
+      id: 'user_2',
+      displayPictureUrl:
+        'https://avatars.githubusercontent.com/u/681493?v=4',
+      displayName: 'Esteban Garcia',
+    },
+    {
+      id: 'user_3',
+      displayPictureUrl:
+        'https://avatars.githubusercontent.com/u/2913773?v=4',
+      displayName: 'Rodolfo Johns',
+    },
+    {
+      id: 'user_4',
+      displayPictureUrl:
+        'https://dt2sdf0db8zob.cloudfront.net/wp-content/uploads/2019/12/9-Best-Online-Avatars-and-How-to-Make-Your-Own-for-Free-image1-5.png',
+      displayName: 'MeGrimLance Steven',
+    },
+  ];
+
+  export const DUMMY_MESSAGE = [
+    {
+        _id: 1,
+        text: 'You are now in contact with ',
+        createdAt: new Date(),
+        user: {
+            _id: 1,
+            name: 'RootsHelper',
+            avatar: 'https://avatars.githubusercontent.com/u/95590918?s=200&v=4'
+        },
+        received: true,
+    }
+  ]
