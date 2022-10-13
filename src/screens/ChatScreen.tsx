@@ -10,9 +10,10 @@ import {
   User,
 } from 'react-native-gifted-chat';
 
+import { renderInputToolbar, renderBubble } from '../components/gifted-chat';
 // import * as contacts from '../relationships';
 import * as models from '../models';
-import { DUMMY_MESSAGE } from '../models/dummyData';
+import { CURRENT_USER, DUMMY_MESSAGE } from '../models/dummyData';
 // import { showQR } from '../qrcode';
 // import {
 //   asContactShareable,
@@ -40,6 +41,9 @@ export default function ChatScreen({
   const [messages, setMessages] = useState<IMessage[]>(DUMMY_MESSAGE);
   const [processing, setProcessing] = useState<boolean>(false);
 
+  useEffect(() => {
+    setMessages(messages.map((message, index) => (index === 0 ? {...message, text: `${message.text} ${user.displayName}`} : message)))
+  }, [])
   //   useEffect(() => {
   //     console.log('ChatScreen - chat set', chat);
   //     const chatSession = roots.startChatSession(chat.id, {
@@ -208,42 +212,6 @@ export default function ChatScreen({
   //     }
   //   }
 
-  //#fad58b
-    function renderBubble(props: BubbleProps<IMessage>) {
-      return (
-        <Bubble
-          {...props}
-          wrapperStyle={{
-            left: {
-              backgroundColor: '#251520',
-            },
-          }}
-          textStyle={{
-            left: {
-              color: '#fff',
-            },
-            right: {
-              color: '#000',
-            },
-          }}
-        />
-      );
-    }
-
-    function renderInputToolbar(props: InputToolbarProps<IMessage>) {
-      return (
-        <InputToolbar
-          {...props}
-          containerStyle={{
-            backgroundColor: '#604050',
-            borderTopColor: '#dddddd',
-            borderTopWidth: 1,
-            padding: 1,
-          }}
-        />
-      );
-    }
-
   //   if (loading) {
   //     console.log('ChatScreen - Loading....');
   //     return <Loading />;
@@ -262,12 +230,10 @@ export default function ChatScreen({
         inverted={false}
         messages={messages?.sort((a, b) => {
           return a.createdAt < b.createdAt ? -1 : 1;
-        }).map(msg => ({...msg, text: `${msg.text}${user.displayName}`}))}
+        })}
         placeholder={'Make a note...'}
-        onSend={(messages) => onSend(messages)}
-        user={{
-          _id: 5,
-        }}
+        onSend={onSend}
+        user={CURRENT_USER}
         parsePatterns={(linkStyle) => [
           {
             type: 'url',
@@ -280,7 +246,7 @@ export default function ChatScreen({
           },
         ]}
         renderAvatarOnTop={true}
-        renderInputToolbar={(props) => renderInputToolbar(props)}
+        renderInputToolbar={renderInputToolbar}
         renderBubble={renderBubble}
         renderQuickReplySend={() => (
           <Text style={{ color: '#e69138', fontSize: 18 }}>Confirm</Text>

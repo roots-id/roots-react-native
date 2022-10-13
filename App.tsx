@@ -1,6 +1,7 @@
+import React from 'react';
 import { StatusBar } from 'expo-status-bar';
 import {DefaultTheme, Provider as PaperProvider} from 'react-native-paper';
-import Providers from "./src/navigation";
+import Navigation from "./src/navigation";
 
 // @ts-ignore
 console.disableYellowBox = true;
@@ -9,7 +10,7 @@ export default function App() {
     console.log("Starting App")
   return (
       <PaperProvider theme={theme}>
-          <Providers/>
+          <Navigation/>
       </PaperProvider>
   );
 }
