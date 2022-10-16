@@ -3,12 +3,12 @@ import React, { useEffect, useState } from 'react';
 import { FlatList, SafeAreaView, View } from 'react-native';
 import { Divider } from 'react-native-paper';
 import { styles } from '../styles/styles';
-import { DUMMY_CONTACTS } from '../models/dummyData';
+import { getContacts } from '../models/samples';
 
 const RelationshipsScreen = ({ route, navigation }) => {
   console.log('rel screen - params', route.params);
   const [refresh, setRefresh] = useState(true);
-  const [contacts, setContacts] = useState(DUMMY_CONTACTS);
+  const [contacts, setContacts] = useState(getContacts());
 
   return (
     <View style={styles.container}>
@@ -16,7 +16,7 @@ const RelationshipsScreen = ({ route, navigation }) => {
         <FlatList
           data={contacts}
           extraData={refresh}
-          keyExtractor={(item) => item.id}
+          keyExtractor={(item) => String(item._id)}
           ItemSeparatorComponent={() => <Divider />}
           renderItem={({ item }) => (
             <React.Fragment>

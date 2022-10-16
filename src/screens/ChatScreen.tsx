@@ -13,7 +13,6 @@ import {
 import { renderInputToolbar, renderBubble } from '../components/gifted-chat';
 // import * as contacts from '../relationships';
 import * as models from '../models';
-import { CURRENT_USER, DUMMY_MESSAGE } from '../models/dummyData';
 // import { showQR } from '../qrcode';
 // import {
 //   asContactShareable,
@@ -26,6 +25,14 @@ import Loading from '../components/Loading';
 import { styles } from '../styles/styles';
 import { CompositeScreenProps } from '@react-navigation/core/src/types';
 import { BubbleProps } from 'react-native-gifted-chat/lib/Bubble';
+import {
+  getChatByUser,
+  getCurrentUser,
+  getMappedCurrentUser,
+  getUserById,
+} from '../models/samples';
+import { MessageType } from '../models/constants';
+import { ROUTE_NAMES } from '../navigation';
 
 export default function ChatScreen({
   route,
@@ -38,12 +45,12 @@ export default function ChatScreen({
   const [contact, setContact] = useState<models.contact>();
   console.log('ChatScreen - got chatItem ', chat);
   const [loading, setLoading] = useState<boolean>(true);
-  const [messages, setMessages] = useState<IMessage[]>(DUMMY_MESSAGE);
+  const [messages, setMessages] = useState<IMessage[]>(getChatByUser(user._id));
   const [processing, setProcessing] = useState<boolean>(false);
 
   useEffect(() => {
-    setMessages(messages.map((message, index) => (index === 0 ? {...message, text: `${message.text} ${user.displayName}`} : message)))
-  }, [])
+    setMessages(messages);
+  }, []);
   //   useEffect(() => {
   //     console.log('ChatScreen - chat set', chat);
   //     const chatSession = roots.startChatSession(chat.id, {
@@ -95,100 +102,36 @@ export default function ChatScreen({
   //     );
   //   }
 
-  //   async function handleQuickReply(replies: Reply[]) {
-  //     console.log(
-  //       'ChatScreen - Processing Quick Reply w/ chat',
-  //       chat.id,
-  //       'w/ replies',
-  //       replies.length
-  //     );
-  //     roots.updateProcessIndicator(chat.id);
-  //     if (replies) {
-  //       for (const reply of replies) {
-  //         console.log('ChatScreen - processing quick reply', chat.id, reply);
-  //         if (reply.value.startsWith(roots.MessageType.PROMPT_PUBLISH)) {
-  //           console.log('ChatScreen - process quick reply to publish DID');
-  //           if (reply.value.endsWith(roots.PUBLISH_DID)) {
-  //             console.log('ChatScreen - publishing DID w/alias', chat.fromAlias);
-  //             const pubChat = await roots.processPublishResponse(chat);
-  //             if (pubChat) {
-  //               setChat(pubChat);
-  //             }
-  //           } else {
-  //             console.log('ChatScreen - not publishing DID');
-  //           }
-  //         } else if (reply.value.startsWith(roots.MessageType.PROMPT_OWN_DID)) {
-  //           console.log('ChatScreen - quick reply view did');
-  //           const r = roots.getMessageById(reply.messageId)?.data;
-  //           console.log('ChatScreen - View rel', r);
-  //           showRel(navigation, asContactShareable(r));
-  //         } else if (
-  //           reply.value.startsWith(roots.MessageType.PROMPT_ACCEPT_CREDENTIAL)
-  //         ) {
-  //           console.log(
-  //             'ChatScreen - process quick reply for accepting credential'
-  //           );
-  //           const res = await roots.processCredentialResponse(chat, reply);
-  //           console.log('ChatScreen - credential accepted?', res);
-  //         } else if (
-  //           reply.value.startsWith(roots.MessageType.PROMPT_ISSUED_CREDENTIAL)
-  //         ) {
-  //           if (reply.value.endsWith(roots.CRED_REVOKE)) {
-  //             console.log(
-  //               'ChatScreen - process quick reply for revoking credential'
-  //             );
-  //             const res = await roots.processRevokeCredential(chat, reply);
-  //             console.log('ChatScreen - credential revoked?', res);
-  //           } else if (reply.value.endsWith(roots.CRED_VIEW)) {
-  //             console.log('ChatScreen - quick reply view issued credential');
-  //             const vCred = roots.processViewCredential(reply.messageId);
-  //             if (vCred) {
-  //               navigation.navigate('Credential Details', { cred: vCred });
-  //             }
-  //           }
-  //         } else if (
-  //           reply.value.startsWith(roots.MessageType.PROMPT_OWN_CREDENTIAL)
-  //         ) {
-  //           console.log('ChatScreen - process quick reply for owned credential');
-  //           if (reply.value.endsWith(roots.CRED_VERIFY)) {
-  //             console.log('ChatScreen - quick reply verify credential');
-  //             const credHash = roots.getMessageById(reply.messageId)?.data;
-  //             console.log(
-  //               'ChatScreen - verifying credential with hash',
-  //               credHash
-  //             );
-  //             await roots.processVerifyCredential(chat, credHash);
-  //           } else if (reply.value.endsWith(roots.CRED_VIEW)) {
-  //             console.log('ChatScreen - quick reply view imported credential');
-  //             const vCred = roots.processViewCredential(reply.messageId);
-  //             if (vCred) {
-  //               navigation.navigate('Credential Details', { cred: vCred });
-  //             }
-  //           }
-  //         } else if (
-  //           reply.value.startsWith(roots.MessageType.PROMPT_RETRY_PROCESS)
-  //         ) {
-  //           console.log('ChatScreen - process quick reply for retry process');
-  //           const process = roots.getMessageById(reply.messageId)?.data;
-  //           process();
-  //         } else {
-  //           console.log(
-  //             'ChatScreen - reply value not recognized, was',
-  //             chat.id,
-  //             reply.value
-  //           );
-  //         }
-  //       }
-  //     } else {
-  //       console.log(
-  //         'ChatScreen - reply',
-  //         replies,
-  //         'or chat',
-  //         chat,
-  //         'were undefined'
-  //       );
-  //     }
-  //   }
+  const openRelationshipDetailScreen = (user) => {
+    navigation.navigate(ROUTE_NAMES.RELATIONSHIP_DETAILS, {
+      user,
+    });
+  };
+
+  function handleQuickReply(replies: Reply[]) {
+    console.log('replies', replies);
+    if (replies) {
+      for (const reply of replies) {
+        if (reply.value.startsWith(MessageType.PROMPT_OWN_DID)) {
+          console.log('ChatScreen - quick reply view did');
+          openRelationshipDetailScreen(getCurrentUser());
+        } else if (reply.value.startsWith(MessageType.PROMPT_OWN_CREDENTIAL)) {
+          console.log('ChatScreen - process quick reply for owned credential');
+          if (reply.value.endsWith(MessageType.CRED_VIEW)) {
+            console.log('ChatScreen - quick reply view imported credential');
+            navigation.navigate(ROUTE_NAMES.CREDENTIAL_DETAILS);
+          }
+        } else {
+          console.log(
+            'ChatScreen - reply value not recognized, was',
+            reply.value
+          );
+        }
+      }
+    } else {
+      console.log('ChatScreen - reply', replies, 'were undefined');
+    }
+  }
 
   //   function processBubbleClick(context: any, message: IMessage): void {
   //     console.log('ChatScreen - bubble pressed', context, message);
@@ -222,18 +165,19 @@ export default function ChatScreen({
       GiftedChat.append(previousMessages, messages)
     );
   }, []);
-
+  console.log(messages);
   return (
     <View style={{ backgroundColor: '#251520', flex: 1, display: 'flex' }}>
       <GiftedChat
         isTyping={processing}
         inverted={false}
+        onQuickReply={handleQuickReply}
         messages={messages?.sort((a, b) => {
           return a.createdAt < b.createdAt ? -1 : 1;
         })}
         placeholder={'Make a note...'}
         onSend={onSend}
-        user={CURRENT_USER}
+        user={getMappedCurrentUser()}
         parsePatterns={(linkStyle) => [
           {
             type: 'url',
@@ -251,8 +195,12 @@ export default function ChatScreen({
         renderQuickReplySend={() => (
           <Text style={{ color: '#e69138', fontSize: 18 }}>Confirm</Text>
         )}
+        // quickReplyStyle={{backgroundColor: '#e69138',borderColor: '#e69138',elevation: 3}}
         renderUsernameOnMessage={true}
         showAvatarForEveryMessage={true}
+        onPressAvatar={(u) =>
+          openRelationshipDetailScreen(getUserById(u._id as number))
+        }
       />
     </View>
   );
