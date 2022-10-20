@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Animated, Text, Pressable, View, Button } from 'react-native';
+import { Animated, Text, Pressable, View } from 'react-native';
 import { IconButton, ToggleButton } from 'react-native-paper';
 import { styles } from '../styles/styles';
 import { CompositeScreenProps } from '@react-navigation/core/src/types';
@@ -8,6 +8,7 @@ import FormButton from '../components/FormButton';
 import { Picker } from '../components/picker';
 import { ConfigService, ServerService } from '../services';
 import { MediatorType, ServerType } from '../models/constants';
+import { ROUTE_NAMES } from '../navigation';
 
 const serverService = new ServerService();
 const configService = new ConfigService();
@@ -76,7 +77,7 @@ export default function SettingsScreen({
             onValueChange={(itemValue) => setHost(String(itemValue))}
           />
         </View>
-        <View style={{ flexDirection: 'row' }}>
+        <View style={{ flexDirection: 'row', marginTop: 10 }}>
           <Text style={styles.listItemCenteredBlack}>Mediator: </Text>
           <Picker
             itemList={[
@@ -106,7 +107,7 @@ export default function SettingsScreen({
             title='Save/Restore Wallet'
             modeValue='contained'
             labelStyle={styles.loginButtonLabel}
-            onPress={() => navigation.navigate('Save')}
+            onPress={() => navigation.navigate(ROUTE_NAMES.SAVE)}
           />
         </View>
         <Text />
@@ -115,7 +116,7 @@ export default function SettingsScreen({
             title='Developers Only'
             modeValue='contained'
             labelStyle={styles.loginButtonLabel}
-            onPress={() => navigation.navigate('Developers')}
+            onPress={() => navigation.navigate(ROUTE_NAMES.DEVELOPERS)}
           />
         </View>
       </Animated.View>

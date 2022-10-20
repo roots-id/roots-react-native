@@ -7,7 +7,7 @@ import MainStack from './MainStack';
 
 const localStorageService = new LocalStorageService();
 
-export const AuthContext = React.createContext();
+export const AuthContext = React.createContext({});
 
 export default function Routes() {
   console.log('Routes - navigation/Routes');

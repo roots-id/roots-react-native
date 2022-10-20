@@ -11,4 +11,8 @@ export class LocalStorageService {
   remove = async (key: string): Promise<any> => {
     await AsyncStorage.removeItem(key);
   }
+
+  clear = async (): Promise<any> => {
+    await AsyncStorage.clear();
+  }
 }
