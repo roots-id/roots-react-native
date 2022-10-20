@@ -9,13 +9,15 @@ import React, { useState } from 'react';
 import LogoTitle from '../components/LogoTitle';
 import IconActions from '../components/IconActions';
 import RelationshipsScreen from '../screens/RelationshipsScreen';
-import RelationshipDetailScreen from "../screens/RelationshipDetailScreen";
+import RelationshipDetailScreen from '../screens/RelationshipDetailScreen';
 import CredentialsScreen from '../screens/CredentialsScreen';
 import DeveloperScreen from '../screens/DeveloperScreen';
 import WalletScreen from '../screens/WalletScreen';
 import ChatScreen from '../screens/ChatScreen';
 import CredentialDetailScreen from '../screens/CredentialDetailScreen';
 import SettingsScreen from '../screens/SettingsScreen';
+import SaveScreen from '../screens/SaveScreen';
+import { DevStack } from './dev-stack';
 import { ROUTE_NAMES } from './constants';
 
 const Stack = createStackNavigator();
@@ -65,7 +67,7 @@ export default function MainStack() {
       >
         <Stack.Group>
           <Stack.Screen
-            name={ ROUTE_NAMES.RELATIONSHIPS }
+            name={ROUTE_NAMES.RELATIONSHIPS}
             component={RelationshipsScreen}
             options={({ navigation, route }) => ({
               headerTitle: (props) => <LogoTitle {...props} title='Contacts' />,
@@ -82,11 +84,13 @@ export default function MainStack() {
             })}
           />
           <Stack.Screen
-            name={ ROUTE_NAMES.CHAT }
+            name={ROUTE_NAMES.CHAT}
             component={ChatScreen}
-            options={({ navigation, route } : { navigation, route }) => ({
+            options={({ navigation, route }: { navigation; route }) => ({
               headerBackTitleVisible: false,
-              headerTitle: (props) => <LogoTitle {...props} title={route.params?.user?.displayName} />,
+              headerTitle: (props) => (
+                <LogoTitle {...props} title={route.params?.user?.displayName} />
+              ),
               headerTitleAlign: 'left',
               headerTitleAllowFontScaling: true,
               headerRight: (props) => (
@@ -125,7 +129,7 @@ export default function MainStack() {
       >
         <Stack.Group>
           <Stack.Screen
-            name={ ROUTE_NAMES.VCS }
+            name={ROUTE_NAMES.VCS}
             component={CredentialsScreen}
             options={({ navigation, route }) => ({
               headerTitle: (props) => (
@@ -146,20 +150,6 @@ export default function MainStack() {
       </Stack.Navigator>
     );
   };
-  const DevStack = () => {
-    return (
-      <Stack.Navigator>
-        <Stack.Group>
-          <Stack.Screen name={ ROUTE_NAMES.DEVELOPER } component={DeveloperScreen} />
-          {/* <Stack.Screen name="Communications" component={CommunicationsScreen}/> */}
-          <Stack.Screen name={ ROUTE_NAMES.WALLET } component={WalletScreen} />
-          {/* <Stack.Screen name="Mediator" component={MediatorScreen}/> */}
-          {/* <Stack.Screen name="RequestCredential" component={RequestCredentialScreen}/> */}
-          {/* <Stack.Screen name="Sidetree" component={Sidetree}/> */}
-        </Stack.Group>
-      </Stack.Navigator>
-    );
-  };
 
   return (
     <Stack.Navigator
@@ -168,19 +158,23 @@ export default function MainStack() {
       }}
     >
       <Stack.Group>
-        <Stack.Screen name={ ROUTE_NAMES.MAIN_TABS } component={Main} />
+        <Stack.Screen name={ROUTE_NAMES.MAIN_TABS} component={Main} />
       </Stack.Group>
       <Stack.Group
         navigationKey={'init'}
         screenOptions={{ presentation: 'transparentModal' }}
       >
-        
-        <Stack.Screen name="Settings" component={SettingsScreen}/>
-        {/* <Stack.Screen name="Save" component={SaveScreen}/> */}
-        <Stack.Screen name={ ROUTE_NAMES.RELATIONSHIP_DETAILS } component={RelationshipDetailScreen}/>
-        <Stack.Screen name={ ROUTE_NAMES.CREDENTIAL_DETAILS } component={CredentialDetailScreen}/>
-        
-        <Stack.Screen name={ ROUTE_NAMES.DEVELOPERS } component={DevStack} />
+        <Stack.Screen
+          name={ROUTE_NAMES.RELATIONSHIP_DETAILS}
+          component={RelationshipDetailScreen}
+        />
+        <Stack.Screen
+          name={ROUTE_NAMES.CREDENTIAL_DETAILS}
+          component={CredentialDetailScreen}
+        />
+        <Stack.Screen name={ROUTE_NAMES.SETTINGS} component={SettingsScreen} />
+        <Stack.Screen name={ROUTE_NAMES.SAVE} component={SaveScreen} />
+        <Stack.Screen name={ROUTE_NAMES.DEVELOPERS} component={DevStack} />
       </Stack.Group>
     </Stack.Navigator>
   );
