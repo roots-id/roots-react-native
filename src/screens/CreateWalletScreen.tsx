@@ -7,6 +7,7 @@ import FormInput from '../components/FormInput';
 import Loading from '../components/Loading'
 
 import {displayOrHide, styles} from "../styles/styles";
+import { ROUTE_NAMES } from '../navigation';
 
 export default function CreateWalletScreen({route, navigation}: CompositeScreenProps<any, any>) {
     const [initialized, setInitialized] = useState<boolean>(false);
@@ -113,7 +114,7 @@ export default function CreateWalletScreen({route, navigation}: CompositeScreenP
 
     function handleSettings() {
         console.log("handling settings")
-        navigation.navigate("Settings")
+        navigation.navigate(ROUTE_NAMES.SETTINGS)
     }
 
     if (loading) {
