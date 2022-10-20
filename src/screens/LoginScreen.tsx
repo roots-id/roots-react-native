@@ -10,6 +10,7 @@ import { CompositeScreenProps } from '@react-navigation/core/src/types';
 import { LocalStorageService } from '../services';
 import { USER_AUTH } from '../common/constants';
 import { AuthContext } from '../navigation/Routes';
+import { ROUTE_NAMES } from '../navigation';
 
 const localStorageService = new LocalStorageService()
 export default function LoginScreen({
@@ -31,7 +32,7 @@ export default function LoginScreen({
 
   function handleSettings() {
     console.log('handling settings');
-    navigation.navigate('Settings');
+    navigation.navigate(ROUTE_NAMES.SETTINGS);
   }
 
   useEffect(() => {

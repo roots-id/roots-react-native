@@ -15,6 +15,7 @@ import DeveloperScreen from '../screens/DeveloperScreen';
 import WalletScreen from '../screens/WalletScreen';
 import ChatScreen from '../screens/ChatScreen';
 import CredentialDetailScreen from '../screens/CredentialDetailScreen';
+import SettingsScreen from '../screens/SettingsScreen';
 import { ROUTE_NAMES } from './constants';
 
 const Stack = createStackNavigator();
@@ -174,7 +175,7 @@ export default function MainStack() {
         screenOptions={{ presentation: 'transparentModal' }}
       >
         
-        {/* <Stack.Screen name="Settings" component={SettingsScreen}/> */}
+        <Stack.Screen name="Settings" component={SettingsScreen}/>
         {/* <Stack.Screen name="Save" component={SaveScreen}/> */}
         <Stack.Screen name={ ROUTE_NAMES.RELATIONSHIP_DETAILS } component={RelationshipDetailScreen}/>
         <Stack.Screen name={ ROUTE_NAMES.CREDENTIAL_DETAILS } component={CredentialDetailScreen}/>
