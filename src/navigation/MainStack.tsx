@@ -19,6 +19,7 @@ import SettingsScreen from '../screens/SettingsScreen';
 import SaveScreen from '../screens/SaveScreen';
 import { DevStack } from './dev-stack';
 import { ROUTE_NAMES } from './constants';
+import ScanQrCode from '../screens/ScanQrCodeScreen';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -171,6 +172,10 @@ export default function MainStack() {
         <Stack.Screen
           name={ROUTE_NAMES.CREDENTIAL_DETAILS}
           component={CredentialDetailScreen}
+        />
+        <Stack.Screen
+          name={ROUTE_NAMES.SCAN_QR_CODE}
+          component={ScanQrCode}
         />
         <Stack.Screen name={ROUTE_NAMES.SETTINGS} component={SettingsScreen} />
         <Stack.Screen name={ROUTE_NAMES.SAVE} component={SaveScreen} />

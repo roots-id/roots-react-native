@@ -7,11 +7,11 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import { Divider, List } from 'react-native-paper';
+import { useSelector } from 'react-redux';
 import { styles } from '../styles/styles';
-import { credential } from '../models';
-import { CREDENTIALS } from '../models/dummyData';
 import { CompositeScreenProps } from '@react-navigation/core/src/types';
 import { ROUTE_NAMES } from '../navigation';
+import { getVerifiedCredentials } from '../store/selectors/credential';
 const credLogo = require('../assets/vc.png');
 
 const CredentialsScreen = ({
@@ -20,15 +20,7 @@ const CredentialsScreen = ({
 }: CompositeScreenProps<any, any>) => {
   console.log('creds screen - params', route.params);
   const [refresh, setRefresh] = useState(true);
-  const [creds, setCreds] = useState<credential[]>([CREDENTIALS]);
-
-  useEffect(() => {
-    setTimeout(() => {
-      setRefresh(false);
-      setCreds([CREDENTIALS]);
-    }, 2000);
-  }, []);
-
+  const creds = useSelector(getVerifiedCredentials);
   return (
     <View style={styles.container}>
       <SafeAreaView style={styles.container}>

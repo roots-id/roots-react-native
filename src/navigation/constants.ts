@@ -13,6 +13,8 @@ export const ROUTE_NAMES = {
   MAIN_TABS: 'mainTabs',
   REQUEST_CREDENTIAL: 'RequestCredential',
   RELATIONSHIP_DETAILS: 'Relationship Details',
+  SHOW_QR_CODE: 'Show_QR_Code',
+  SCAN_QR_CODE: 'Scan_QR_Code',
   SIDE_TREE: 'Sidetree',
   SETTINGS: 'Settings',
   SAVE: 'Save',

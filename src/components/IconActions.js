@@ -1,6 +1,7 @@
 import React from 'react';
 import {View} from 'react-native';
 import {IconButton} from 'react-native-paper';
+import { ROUTE_NAMES } from '../navigation/constants';
 
 // import {asContactShareable, getContactByAlias, showRel} from '../relationships';
 
@@ -31,7 +32,7 @@ export default function IconActions(...props) {
                 icon="qrcode-scan"
                 size={28}
                 color="#e69138"
-                onPress={() => navigation.navigate("Scan QR Code", {type: scan})}
+                onPress={() => navigation.navigate(ROUTE_NAMES.SCAN_QR_CODE, {type: scan})}
             />
             <IconButton
                 icon="cog-outline"
