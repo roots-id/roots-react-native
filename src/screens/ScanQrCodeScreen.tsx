@@ -6,9 +6,12 @@ import {
   Pressable,
   Button,
   StyleSheet,
+  Platform,
 } from 'react-native';
 import { IconButton } from 'react-native-paper';
 import { BarCodeScanner } from 'expo-barcode-scanner';
+import { BarCodeEvent } from 'expo-barcode-scanner/src/BarCodeScanner';
+import { Camera } from 'expo-camera';
 // import { getDemoCred } from '../credentials';
 // import { getDemoRel, getUserId } from '../relationships';
 // import {
@@ -18,7 +21,6 @@ import { BarCodeScanner } from 'expo-barcode-scanner';
 // } from '../roots';
 import React from 'react';
 import { CompositeScreenProps } from '@react-navigation/core/src/types';
-import { BarCodeEvent } from 'expo-barcode-scanner/src/BarCodeScanner';
 import { styles } from '../styles/styles';
 import { ConfigService } from '../services';
 import { useDispatch } from 'react-redux';
@@ -26,6 +28,10 @@ import { addCredential } from '../store/slices/credential';
 import { addContact } from '../store/slices/contact';
 
 const configService = new ConfigService();
+
+const BarcodeWrapper = (props) => {
+  return Platform.OS === 'web' ? <Camera {...props} /> : <BarCodeScanner {...props} />
+}
 
 export default function ScanQrCodeScreen({
   route,
@@ -145,8 +151,7 @@ export default function ScanQrCodeScreen({
             height: '100%',
           }}
         >
-          <BarCodeScanner
-            // type={}
+          <BarcodeWrapper
             onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
             style={StyleSheet.absoluteFillObject}
           />
