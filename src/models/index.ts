@@ -184,6 +184,12 @@ export type timeStampInfo = {
     blockTimestamp: string,
 }
 
+export type contactShareable = {
+    displayName: string,
+    displayPictureUrl: string,
+    did: string,
+}
+
 export type vc = {
     encodedSignedCredential: string,
     proof: proof,

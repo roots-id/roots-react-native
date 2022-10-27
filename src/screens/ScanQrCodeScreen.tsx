@@ -21,9 +21,9 @@ import { CompositeScreenProps } from '@react-navigation/core/src/types';
 import { BarCodeEvent } from 'expo-barcode-scanner/src/BarCodeScanner';
 import { styles } from '../styles/styles';
 import { ConfigService } from '../services';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { addCredential } from '../store/slices/credential';
-import { getVerifiedCredentials } from '../store/selectors/credential';
+import { addContact } from '../store/slices/contact';
 
 const configService = new ConfigService();
 
@@ -35,23 +35,15 @@ export default function ScanQrCodeScreen({
   const [hasPermission, setHasPermission] = useState<boolean>(false);
   const [scanned, setScanned] = useState<boolean>(false);
   const [timeOutId, setTimeOutId] = useState<NodeJS.Timeout>();
-  const verifiedCredentials = useSelector(getVerifiedCredentials);
   const dispatch = useDispatch();
   const modelType = route.params.type;
 
   const addDummyCredenial = () => {
-    dispatch(
-      addCredential({
-        alias: `dummy${verifiedCredentials.length + 1}_credentialAlias`,
-        verifiedCredential: {
-          encodedSignedCredential: `dummy${verifiedCredentials.length + 1}_verifiedCredential_${Date.now()}`,
-          proof: {
-            hash: `dummy${verifiedCredentials.length + 1}_proofHash_${Date.now()}`,
-            index: verifiedCredentials.length,
-          },
-        },
-      })
-    );
+    dispatch(addCredential({}));
+  }
+
+  const addDummyContact = () => {
+    dispatch(addContact({}));
   }
 
   const handleDemo = async () => {
@@ -64,6 +56,7 @@ export default function ScanQrCodeScreen({
         console.log('Scan QR - getting contact demo data');
         // const demoData = getDemoRel();
         // await importContact(demoData);
+        addDummyContact();
       } else {
         console.log('Scan QR - getting credential demo data');
         // const did = getDid(getUserId());
@@ -97,14 +90,15 @@ export default function ScanQrCodeScreen({
 
   const handleBarCodeScanned = async ({ type, data }: BarCodeEvent) => {
     setScanned(true);
-    console.log('Scan QR - scanned data', modelType, type, data);
-    const jsonData = JSON.parse(data);
+    console.log('Scan QR - scan complete but only using dummy data', modelType, type, data);
+    // const jsonData = JSON.parse(data);
     if (modelType == 'credential') {
-      console.log('Scan QR - Importing scanned vc', jsonData);
+      console.log('Scan QR - Importing dummy vc', data);
       addDummyCredenial();
       // await importVerifiedCredential(jsonData);
     } else if (modelType == 'contact') {
-      console.log('Scan QR - Importing scanned contact', jsonData);
+      console.log('Scan QR - Importing dummy contact', data);
+      addDummyContact();
       // await importContact(jsonData);
     }
     clearAndGoBack();
