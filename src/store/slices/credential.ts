@@ -20,7 +20,18 @@ const credentialSlice = createSlice({
   },
   reducers: {
     addCredential(state, action: PayloadAction<any>) {
-      state.credentials.push(action.payload);
+      // dummy add credential
+      const dummyCredential = {
+        alias: `dummy${state.credentials.length + 1}_credentialAlias`,
+        verifiedCredential: {
+          encodedSignedCredential: `dummy${state.credentials.length + 1}_verifiedCredential_${Date.now()}`,
+          proof: {
+            hash: `dummy${state.credentials.length + 1}_proofHash_${Date.now()}`,
+            index: state.credentials.length,
+          },
+        },
+      }
+      state.credentials.push(dummyCredential);
     },
   },
 });

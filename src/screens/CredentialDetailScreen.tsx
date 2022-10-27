@@ -17,6 +17,7 @@ import {
   getCredentialItem,
 } from '../models/samples/credentials';
 import { DIDS } from '../models/samples';
+import { goToShowQrCode } from '../navigation/helper/navigate-to';
 const credLogo = require('../assets/vc.png');
 
 export default function CredentialDetailScreen({
@@ -53,7 +54,20 @@ export default function CredentialDetailScreen({
       <Animated.View style={styles.viewAnimated}>
         <View style={{ flexDirection: 'row' }}>
           <IconButton icon={verified} size={36} color='#e69138' />
-          <IconButton icon='qrcode' size={36} color='#e69138' />
+          <IconButton
+            icon='qrcode'
+            size={36}
+            color='#e69138'
+            onPress={() =>
+              goToShowQrCode(navigation, {
+                encodedSignedCredential: 'dummy_vcEncodedSignedCredential',
+                proof: {
+                  hash: 'dummy_proofHash',
+                  index: 0,
+                },
+              })
+            }
+          />
         </View>
         <Image source={credLogo} style={styles.credLogoStyle} />
         <FlatList

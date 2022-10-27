@@ -12,6 +12,7 @@ import { CompositeScreenProps } from '@react-navigation/core/src/types';
 import { styles } from '../styles/styles';
 
 import * as models from '../models';
+import { goToShowQrCode } from '../navigation/helper/navigate-to';
 // import { showQR } from '../qrcode';
 // import { addDidDoc, asContactShareable } from '../relationships';
 // import { recursivePrint } from '../utils';
@@ -72,7 +73,7 @@ export default function RelationshipDetailScreen({
             onPress={() => {
               if (rel) {
                 console.log('RelDetailScreen - show QR for rel', rel);
-                // showQR(navigation, asContactShareable(rel));
+                goToShowQrCode(navigation, rel)
               } else {
                 console.error(
                   'RelDetailScreen - cant show qr, rel not set',
