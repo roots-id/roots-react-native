@@ -32,6 +32,7 @@ export default function Routes() {
       setLoggedIn(!!userExists);
     };
     fetchData();
+    // localStorageService.clear();
   }, []);
 
   return (

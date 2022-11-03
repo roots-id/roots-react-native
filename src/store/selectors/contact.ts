@@ -1,12 +1,13 @@
 import { createSelector } from 'reselect';
+import { BOTS_NAMES } from '../../common/constants';
 
 const contactSelector = (state: any) => state.contact;
 
 export const getContacts = createSelector(contactSelector, (state) => {
   return state.contacts.filter(
     (contact) =>
-      contact.displayName !== 'RootsHelper' &&
-      contact.displayName !== 'PrismBot'
+      contact.displayName !== BOTS_NAMES.ROOTS_HELPER &&
+      contact.displayName !== BOTS_NAMES.PRISM_BOT
   );
 });
 

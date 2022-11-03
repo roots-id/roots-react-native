@@ -1,8 +1,8 @@
-import {logger} from '../logging';
+// import {logger} from '../logging';
 import {QuickReplies} from 'react-native-gifted-chat';
 import {replaceSpecial} from '../utils';
 
-const ID_SEPARATOR = "_"
+export const ID_SEPARATOR = "_"
 
 export const CRED_ISSUE_TX = "ISSUE_CREDENTIAL"
 export const DID_PUBLISH_TX = "PUBLISH_DID"
@@ -215,7 +215,7 @@ export function createChat(chatAlias: string, fromDidAlias: string,
         title: title,
         published: false,
     }
-    logger("models - created chat model w/keys", Object.keys(chat))
+    // logger("models - created chat model w/keys", Object.keys(chat))
     return chat;
 }
 
@@ -230,14 +230,14 @@ export function createMessage(idText: string, bodyText: string, statusText: stri
         system: system,
         type: statusText,
     }
-    logger("models - created msg model w/keys", Object.keys(msg))
+    // logger("models - created msg model w/keys", Object.keys(msg))
     return msg;
 }
 
 export function createMessageId(chatAlias: string, relId: string, msgNum: number): string {
-    logger("model - creating message id", chatAlias, relId, msgNum)
+    // logger("model - creating message id", chatAlias, relId, msgNum)
     let msgId = getStorageKey(chatAlias, ModelType.MESSAGE) + ID_SEPARATOR + relId + ID_SEPARATOR + String(msgNum);
-    logger("model - Generated msg id", msgId);
+    // logger("model - Generated msg id", msgId);
     return msgId;
 }
 
