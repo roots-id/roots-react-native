@@ -1,5 +1,4 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { faker } from '@faker-js/faker';
 
 export const CONTACTS = [
   {
@@ -42,15 +41,16 @@ export const CONTACTS = [
 const contactSlice = createSlice({
   name: 'contact',
   initialState: {
-    contacts: CONTACTS,
+    contacts: [],
   },
   reducers: {
-    addContact(state, action: PayloadAction<any>) {
+    addContact(state, action: PayloadAction<any>): any {
       // add dummy contact
       const dummyContact = {
         _id: state.contacts.length + 1,
-        displayPictureUrl: faker.internet.avatar(),
-        displayName: faker.internet.userName(),
+        displayPictureUrl: action.payload.displayPictureUrl,
+        displayName: action.payload.displayName,
+        ...(action.payload.isCurrentUser ? { isCurrentUser: true} : {})
       }
       state.contacts.push(dummyContact);
     }

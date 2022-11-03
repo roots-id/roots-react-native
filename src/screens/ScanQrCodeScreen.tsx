@@ -12,6 +12,7 @@ import { IconButton } from 'react-native-paper';
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import { BarCodeEvent } from 'expo-barcode-scanner/src/BarCodeScanner';
 import { Camera } from 'expo-camera';
+import { faker } from '@faker-js/faker';
 // import { getDemoCred } from '../credentials';
 // import { getDemoRel, getUserId } from '../relationships';
 // import {
@@ -30,8 +31,12 @@ import { addContact } from '../store/slices/contact';
 const configService = new ConfigService();
 
 const BarcodeWrapper = (props) => {
-  return Platform.OS === 'web' ? <Camera {...props} /> : <BarCodeScanner {...props} />
-}
+  return Platform.OS === 'web' ? (
+    <Camera {...props} />
+  ) : (
+    <BarCodeScanner {...props} />
+  );
+};
 
 export default function ScanQrCodeScreen({
   route,
@@ -46,18 +51,23 @@ export default function ScanQrCodeScreen({
 
   const addDummyCredenial = () => {
     dispatch(addCredential({}));
-  }
+  };
 
   const addDummyContact = () => {
-    dispatch(addContact({}));
-  }
+    dispatch(
+      addContact({
+        displayPictureUrl: faker.internet.avatar(),
+        displayName: faker.internet.userName(),
+      })
+    );
+  };
 
   const handleDemo = async () => {
     if (!scanned && configService.getDemo()) {
       setScanned(true);
       console.log('Scan QR - pretending to scan with demo data');
       alert('No data scanned, using demo data instead.');
-      
+
       if (modelType === 'contact') {
         console.log('Scan QR - getting contact demo data');
         // const demoData = getDemoRel();
@@ -96,7 +106,12 @@ export default function ScanQrCodeScreen({
 
   const handleBarCodeScanned = async ({ type, data }: BarCodeEvent) => {
     setScanned(true);
-    console.log('Scan QR - scan complete but only using dummy data', modelType, type, data);
+    console.log(
+      'Scan QR - scan complete but only using dummy data',
+      modelType,
+      type,
+      data
+    );
     // const jsonData = JSON.parse(data);
     if (modelType == 'credential') {
       console.log('Scan QR - Importing dummy vc', data);

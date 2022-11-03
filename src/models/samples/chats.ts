@@ -1,5 +1,4 @@
 import { MessageType } from '../constants';
-import { chat } from '../dummyData';
 import { getCurrentUser } from './contacts';
 
 const CHATS_OWN = [
