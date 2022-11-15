@@ -33,6 +33,8 @@ import {
 } from '../models/samples';
 import { MessageType } from '../models/constants';
 import { ROUTE_NAMES } from '../navigation';
+import { useSelector } from 'react-redux';
+import { getChatById } from '../store/selectors/chat';
 
 export default function ChatScreen({
   route,
@@ -47,10 +49,11 @@ export default function ChatScreen({
   const [loading, setLoading] = useState<boolean>(true);
   const [messages, setMessages] = useState<IMessage[]>(getChatByUser(user._id));
   const [processing, setProcessing] = useState<boolean>(false);
+  const currentChat = useSelector((state) => getChatById(state, user._id));
 
-  useEffect(() => {
-    setMessages(messages);
-  }, []);
+  // useEffect(() => {
+  //   setMessages(messages);
+  // }, []);
   //   useEffect(() => {
   //     console.log('ChatScreen - chat set', chat);
   //     const chatSession = roots.startChatSession(chat.id, {
@@ -115,6 +118,19 @@ export default function ChatScreen({
         if (reply.value.startsWith(MessageType.PROMPT_OWN_DID)) {
           console.log('ChatScreen - quick reply view did');
           openRelationshipDetailScreen(getCurrentUser());
+        } else if (
+          reply.value.startsWith(MessageType.PROMPT_ISSUED_CREDENTIAL)
+        ) {
+          if (reply.value.endsWith(MessageType.CRED_REVOKE)) {
+            console.log(
+              'ChatScreen - process quick reply for revoking credential'
+            );
+            console.log('reply is here', reply)
+            console.log('ChatScreen - credential revoked?');
+          } else if (reply.value.endsWith(MessageType.CRED_VIEW)) {
+            console.log('ChatScreen - quick reply view issued credential');
+            navigation.navigate(ROUTE_NAMES.CREDENTIAL_DETAILS);
+          }
         } else if (reply.value.startsWith(MessageType.PROMPT_OWN_CREDENTIAL)) {
           console.log('ChatScreen - process quick reply for owned credential');
           if (reply.value.endsWith(MessageType.CRED_VIEW)) {
@@ -161,18 +177,18 @@ export default function ChatScreen({
   //   }
 
   const onSend = useCallback((messages = []) => {
-    setMessages((previousMessages) =>
-      GiftedChat.append(previousMessages, messages)
-    );
+    // setMessages((previousMessages) =>
+    //   GiftedChat.append(previousMessages, messages)
+    // );
   }, []);
-  console.log(messages);
+
   return (
     <View style={{ backgroundColor: '#251520', flex: 1, display: 'flex' }}>
       <GiftedChat
         isTyping={processing}
         inverted={false}
         onQuickReply={handleQuickReply}
-        messages={messages?.sort((a, b) => {
+        messages={currentChat?.messages?.sort((a, b) => {
           return a.createdAt < b.createdAt ? -1 : 1;
         })}
         placeholder={'Make a note...'}

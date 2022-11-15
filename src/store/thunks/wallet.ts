@@ -1,5 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit'
 import { WALLET_CREATED_SUCCESS } from '../action-types/wallet';
+import { addWallet } from '../slices/wallet';
 
 const WALLET_NAME_STORAGE_KEY = "primaryRootsWalletStorageNameKey"
 
@@ -17,7 +18,7 @@ export const createWallet = createAsyncThunk(
   async (wallet: CreateWalletDto, thunkAPI) => {
     // TODO-Dummy: Dummy Wallet created, will replace this with original wallet creation
     const createdWallet = {...wallet, key: WALLET_NAME_STORAGE_KEY };
-    thunkAPI.fulfillWithValue(createdWallet);
+    thunkAPI.dispatch(addWallet(createdWallet));
     return WALLET_CREATED_SUCCESS
   }
 )

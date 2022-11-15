@@ -1,26 +1,28 @@
 import { ID_SEPARATOR, ModelType, message, DID_PUBLISH_TX, getStorageKey } from '../models';
 import { MessageType } from '../models/constants/chat-enums';
 
-export function createMessageId(chatAlias: string, relId: string, msgNum: number): string {
-    let msgId = getStorageKey(chatAlias, ModelType.MESSAGE) + ID_SEPARATOR + relId + ID_SEPARATOR + String(msgNum);
+export function createMessageId(chatId: string, relId: string, timestamp: number): string {
+    let msgId = getStorageKey(typeof chatId === 'string' ? chatId : String(chatId), ModelType.MESSAGE) + ID_SEPARATOR + relId + ID_SEPARATOR + String(timestamp);
     return msgId;
 }
 
-export function createMessage(
-  idText: string,
+export function formatMessage(
+  msgId: string,
   bodyText: string,
   statusText: string,
   timeInMillis: number,
-  relId: string,
+  chatId: string,
+  senderId: number,
   system = false,
   data: any
 ): any {
   const msg = {
-    body: bodyText,
-    createdTime: timeInMillis,
+    text: bodyText,
+    createdAt: timeInMillis,
     data: data,
-    id: idText,
-    rel: relId,
+    _id: msgId,
+    rel: chatId,
+    senderId: senderId,
     system: system,
     type: statusText,
   };
@@ -35,7 +37,7 @@ function addQuickReply(msg: message) {
         {
           title: 'Add to Prism',
           value: MessageType.PROMPT_PUBLISH + DID_PUBLISH_TX,
-          messageId: msg.id,
+          messageId: msg._id,
         },
       ],
     };
@@ -48,7 +50,7 @@ function addQuickReply(msg: message) {
         {
           title: 'View',
           value: MessageType.PROMPT_OWN_DID,
-          messageId: msg.id,
+          messageId: msg._id,
         },
       ],
     };
@@ -61,7 +63,7 @@ function addQuickReply(msg: message) {
         {
           title: 'Accept',
           value: MessageType.PROMPT_ACCEPT_CREDENTIAL + 'CRED_ACCEPTED',
-          messageId: msg.id,
+          messageId: msg._id,
         },
       ],
     };
@@ -74,12 +76,12 @@ function addQuickReply(msg: message) {
         {
           title: 'View',
           value: MessageType.PROMPT_ISSUED_CREDENTIAL + 'CRED_VIEW',
-          messageId: msg.id,
+          messageId: msg._id,
         },
         {
           title: 'Revoke',
           value: MessageType.PROMPT_ISSUED_CREDENTIAL + 'CRED_REVOKE',
-          messageId: msg.id,
+          messageId: msg._id,
         },
       ],
     };
@@ -92,7 +94,7 @@ function addQuickReply(msg: message) {
         {
           title: 'View',
           value: MessageType.PROMPT_OWN_CREDENTIAL + 'CRED_VIEW',
-          messageId: msg.id,
+          messageId: msg._id,
         },
       ],
     };
@@ -105,7 +107,7 @@ function addQuickReply(msg: message) {
         {
           title: 'Retry(Coming Soon)',
           value: MessageType.PROMPT_RETRY_PROCESS,
-          messageId: msg.id,
+          messageId: msg._id,
         },
       ],
     };
@@ -117,17 +119,17 @@ function addMessageExtensions(msg: message) {
   return msg;
 }
 
-export async function sendMessage(
-  chat: any,
+export function sendMessage(
+  chatId: any,
+  senderId: number,
   msgText: string,
   msgType: MessageType,
-  contactAlias: string,
   system = false,
   data: any = {}
 ) {
   const msgTime = Date.now();
-  const msgId = createMessageId(chat.id, '123', msgTime);
-  let msg = createMessage(msgId, msgText, msgType, msgTime, '1', system, data);
+  const msgId = createMessageId(chatId, String(senderId), msgTime);
+  let msg = formatMessage(msgId, msgText, msgType, msgTime, chatId, senderId, system, data);
   msg = addMessageExtensions(msg);
   return {...msg, received: true}
 }

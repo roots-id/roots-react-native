@@ -135,11 +135,11 @@ export type key = {
 }
 
 export type message = {
-    body: string,
+    text: string,
     type: string,
-    createdTime: number,
+    createdAt: number,
     data: any,
-    id: string,
+    _id: string,
     image?: string,
     quickReplies?: QuickReplies,
     rel: string,

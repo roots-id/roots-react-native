@@ -45,16 +45,9 @@ const contactSlice = createSlice({
   },
   reducers: {
     addContact(state, action: PayloadAction<any>): any {
-      // add dummy contact
-      const dummyContact = {
-        _id: state.contacts.length + 1,
-        displayPictureUrl: action.payload.displayPictureUrl,
-        displayName: action.payload.displayName,
-        ...(action.payload.isCurrentUser ? { isCurrentUser: true} : {})
-      }
-      state.contacts.push(dummyContact);
+      state.contacts.push(action.payload);
     }
-  },
+  }
 });
 
 export const { addContact } = contactSlice.actions;

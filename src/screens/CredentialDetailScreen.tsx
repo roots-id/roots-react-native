@@ -18,6 +18,8 @@ import {
 } from '../models/samples/credentials';
 import { DIDS } from '../models/samples';
 import { goToShowQrCode } from '../navigation/helper/navigate-to';
+import { useDispatch } from 'react-redux';
+import { updateCredentialValidation } from '../store/thunks/credential';
 const credLogo = require('../assets/vc.png');
 
 export default function CredentialDetailScreen({
@@ -25,6 +27,7 @@ export default function CredentialDetailScreen({
   navigation,
 }: CompositeScreenProps<any, any>) {
   console.log('cred details - route params are', JSON.stringify(route.params));
+  const dispatch = useDispatch();
   const [cred, setCred] = useState<models.credential>(
     getCredentialItem(DIDS[0])
   );
@@ -34,6 +37,18 @@ export default function CredentialDetailScreen({
   //     console.log('cred details - initially setting cred', cred);
   //     setCred(route.params.cred);
   //   }, []);
+
+  const updateVerification = async () => {
+    if(route.params?.cred?._id) {
+      const isRevoked = (await dispatch(updateCredentialValidation(route.params?.cred))).payload;
+      if(isRevoked){
+        setVerified("close-octagon-outline")
+      } else {
+        setVerified("check-bold")
+      }
+    }
+  }
+
   return (
     <View
       style={{
@@ -53,7 +68,7 @@ export default function CredentialDetailScreen({
       </View>
       <Animated.View style={styles.viewAnimated}>
         <View style={{ flexDirection: 'row' }}>
-          <IconButton icon={verified} size={36} color='#e69138' />
+          <IconButton icon={verified} size={36} color='#e69138' onPress={updateVerification} />
           <IconButton
             icon='qrcode'
             size={36}
