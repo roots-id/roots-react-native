@@ -12,10 +12,9 @@ import { displayOrHide, styles } from '../styles/styles';
 import { ROUTE_NAMES } from '../navigation';
 import { createWallet } from '../store/thunks/wallet';
 import { WALLET_CREATED_SUCCESS } from '../store/action-types/wallet';
-import { addContact } from '../store/slices/contact';
+import { createContact } from '../store/thunks/contact';
 import { initiateChat, addMessage } from '../store/slices/chat';
-import { BOTS_NAMES } from '../common/constants';
-import { getCurrentUserContact } from '../store/selectors/contact';
+import { BOTS_MSGS, BOTS_NAMES } from '../common/constants';
 import { sendMessage } from '../helpers/messages';
 import { MessageType } from '../models/constants/chat-enums';
 
@@ -24,7 +23,6 @@ export default function CreateWalletScreen({
   navigation,
 }: CompositeScreenProps<any, any>) {
   const dispatch = useDispatch<any>();
-  const currentUser = useSelector(getCurrentUserContact);
   const [initialized, setInitialized] = useState<boolean>(false);
   const [loading, setLoading] = useState(false);
   const [mnemonic, setMnemonic] = useState<string>('');
@@ -62,54 +60,117 @@ export default function CreateWalletScreen({
     checkErrors();
   }, [userName, walletName, password, confirmPassword, problemText]);
 
-  function initiateWallet() {
+  async function initiateWallet() {
+    const rootsHelperId = (
+      await dispatch(
+        createContact({
+          displayPictureUrl:
+            'https://avatars.githubusercontent.com/u/95590918?s=200&v=4',
+          displayName: BOTS_NAMES.ROOTS_HELPER,
+        })
+      )
+    ).payload;
+    const prismBotId = (
+      await dispatch(
+        createContact({
+          displayPictureUrl:
+            'https://avatars.githubusercontent.com/u/11140484?s=200&v=4',
+          displayName: BOTS_NAMES.PRISM_BOT,
+        })
+      )
+    ).payload;
+    const userId = (
+      await dispatch(
+        createContact({
+          displayPictureUrl: faker.internet.avatar(),
+          displayName: walletName,
+          isCurrentUser: true,
+        })
+      )
+    ).payload;
+
+    dispatch(initiateChat({ chatId: userId }));
     dispatch(
-      addContact({
-        displayPictureUrl:
-          'https://avatars.githubusercontent.com/u/95590918?s=200&v=4',
-        displayName: BOTS_NAMES.ROOTS_HELPER,
+      addMessage({
+        chatId: userId,
+        message: sendMessage(
+          userId,
+          rootsHelperId,
+          BOTS_MSGS[0],
+          MessageType.TEXT
+        ),
       })
     );
     dispatch(
-      addContact({
-        displayPictureUrl:
-          'https://avatars.githubusercontent.com/u/11140484?s=200&v=4',
-        displayName: BOTS_NAMES.PRISM_BOT,
+      addMessage({
+        chatId: userId,
+        message: sendMessage(
+          userId,
+          rootsHelperId,
+          BOTS_MSGS[1],
+          MessageType.TEXT
+        ),
       })
     );
     dispatch(
-      addContact({
-        displayPictureUrl: faker.internet.avatar(),
-        displayName: walletName,
-        isCurrentUser: true,
+      addMessage({
+        chatId: userId,
+        message: sendMessage(
+          userId,
+          rootsHelperId,
+          BOTS_MSGS[2],
+          MessageType.TEXT
+        ),
       })
     );
-    console.log('currentUser', currentUser);
-    dispatch(initiateChat({ chatId: currentUser._id }));
-    dispatch(addMessage({ chatId: currentUser._id, message: sendMessage(
-      currentUser._id,
-      'Welcome to your personal RootsWallet history!',
-      MessageType.TEXT,
-      BOTS_NAMES.ROOTS_HELPER
-    )}));
-    dispatch(addMessage({ chatId: currentUser._id, message: sendMessage(
-      currentUser._id,
-      "We'll post new wallet events here.",
-      MessageType.TEXT,
-      BOTS_NAMES.ROOTS_HELPER
-    )}));
-    dispatch(addMessage({ chatId: currentUser._id, message: sendMessage(
-      currentUser._id,
-      'You created your first decentralized ID (called a DID)!',
-      MessageType.TEXT,
-      BOTS_NAMES.ROOTS_HELPER
-    )}));
-    dispatch(addMessage({ chatId: currentUser._id, message: sendMessage(
-      currentUser._id,
-      'Your new DID is being added to Prism so that you can receive verifiable credentials (called VCs) from other users and organizations like Catalyst, your school, rental companies, etc.',
-      MessageType.TEXT,
-      BOTS_NAMES.PRISM_BOT
-    )}));
+    dispatch(
+      addMessage({
+        chatId: userId,
+        message: sendMessage(
+          userId,
+          prismBotId,
+          BOTS_MSGS[3],
+          MessageType.TEXT,
+        ),
+      })
+    );
+    dispatch(
+      addMessage({
+        chatId: userId,
+        message: sendMessage(
+          userId,
+          prismBotId,
+          BOTS_MSGS[4],
+          MessageType.PROMPT_OWN_DID,
+          false,
+          '1234567890'
+        ),
+      })
+    );
+    dispatch(
+      addMessage({
+        chatId: userId,
+        message: sendMessage(
+          userId,
+          prismBotId,
+          BOTS_MSGS[5],
+          MessageType.BLOCKCHAIN_URL,
+          false,
+          'randomhash123413132'
+        ),
+      })
+    );
+    dispatch(
+      addMessage({
+        chatId: userId,
+        message: sendMessage(
+          userId,
+          prismBotId,
+          BOTS_MSGS[6],
+          MessageType.TEXT
+        ),
+      })
+    );
   }
 
   function checkErrors() {

@@ -24,9 +24,13 @@ import React from 'react';
 import { CompositeScreenProps } from '@react-navigation/core/src/types';
 import { styles } from '../styles/styles';
 import { ConfigService } from '../services';
-import { useDispatch } from 'react-redux';
-import { addCredential } from '../store/slices/credential';
-import { addContact } from '../store/slices/contact';
+import { useDispatch, useSelector } from 'react-redux';
+import { createContact } from '../store/thunks/contact';
+import { addMessage, initiateChat } from '../store/slices/chat';
+import { sendMessage } from '../helpers/messages';
+import { MessageType } from '../models/constants/chat-enums';
+import { getCurrentUserContact, getRootsHelperContact } from '../store/selectors/contact';
+import { createCredential } from '../store/thunks/credential';
 
 const configService = new ConfigService();
 
@@ -46,22 +50,53 @@ export default function ScanQrCodeScreen({
   const [hasPermission, setHasPermission] = useState<boolean>(false);
   const [scanned, setScanned] = useState<boolean>(false);
   const [timeOutId, setTimeOutId] = useState<NodeJS.Timeout>();
+  const rootsHelper = useSelector(getRootsHelperContact);
+  const currentUser = useSelector(getCurrentUserContact);
   const dispatch = useDispatch();
   const modelType = route.params.type;
 
   const addDummyCredenial = () => {
-    dispatch(addCredential({}));
+    dispatch(createCredential({issuerId: 1, revoked: false}));
   };
 
-  const addDummyContact = () => {
-    dispatch(
-      addContact({
+  async function addDummyContact(){
+    const newContactId = (await dispatch(
+      createContact({
         displayPictureUrl: faker.internet.avatar(),
         displayName: faker.internet.userName(),
       })
+    )).payload;
+
+    dispatch(initiateChat({ chatId: newContactId }));
+
+    dispatch(
+      addMessage({
+        chatId: newContactId,
+        message: sendMessage(
+          newContactId,
+          rootsHelper?._id,
+          "To celebrate your new contact, you are issuing a verifiable credential",
+          MessageType.TEXT
+        ),
+      })
+    );
+    console.log('before createCredential')
+    dispatch(createCredential({issuerId: currentUser?._id, revoked: false}));
+    dispatch(
+      addMessage({
+        chatId: newContactId,
+        message: sendMessage(
+          newContactId,
+          rootsHelper?._id,
+          "You have issued a verifiable credential!",
+          MessageType.PROMPT_ISSUED_CREDENTIAL,
+          false,
+          'asdasfaadvcasdasdas'
+        ),
+      })
     );
   };
-
+  
   const handleDemo = async () => {
     if (!scanned && configService.getDemo()) {
       setScanned(true);

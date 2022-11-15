@@ -11,5 +11,6 @@ export enum MessageType {
   STATUS = 'statusMsgType',
   TEXT = 'textMsgType',
   CRED_VIEW = 'CRED_VIEW',
+  CRED_REVOKE = 'CRED_REVOKE',
   CRED_VERIFY = 'CRED_VERIFY'
 }

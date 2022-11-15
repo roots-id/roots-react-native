@@ -1,5 +1,4 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import uuid from 'react-native-uuid';
 
 const chatSlice = createSlice({
   name: 'chat',
@@ -15,7 +14,6 @@ const chatSlice = createSlice({
         messages: []
       }
       state.chats[action.payload.chatId] = newChat;
-      return newChat;
     },
     addMessage(state, action: PayloadAction<any>) {
       // add dummy contact
