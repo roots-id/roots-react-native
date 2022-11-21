@@ -60,7 +60,7 @@ export default function CreateWalletScreen({
     checkErrors();
   }, [userName, walletName, password, confirmPassword, problemText]);
 
-  async function initiateWallet() {
+  async function initiateUserAccount() {
     const rootsHelperId = (
       await dispatch(
         createContact({
@@ -281,7 +281,7 @@ export default function CreateWalletScreen({
               if (response.payload === WALLET_CREATED_SUCCESS) {
                 setInitialized(true);
                 setProblemText('');
-                initiateWallet();
+                initiateUserAccount();
                 console.log('CreateWalletScreen - signing in');
                 navigation.navigate('Login');
               }

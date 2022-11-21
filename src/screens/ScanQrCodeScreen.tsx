@@ -55,8 +55,21 @@ export default function ScanQrCodeScreen({
   const dispatch = useDispatch();
   const modelType = route.params.type;
 
-  const addDummyCredenial = () => {
-    dispatch(createCredential({issuerId: 1, revoked: false}));
+  const addDummyCredenial = async () => {
+    const cred = (await dispatch(createCredential({issuerId: currentUser._id, revoked: false}))).payload;
+    dispatch(
+      addMessage({
+        chatId: currentUser._id,
+        message: sendMessage(
+          currentUser._id,
+          rootsHelper?._id,
+          `You created a demo credential ${cred.alias}!`,
+          MessageType.PROMPT_ISSUED_CREDENTIAL,
+          false,
+          { credential: cred }
+        ),
+      })
+    );
   };
 
   async function addDummyContact(){
@@ -80,18 +93,17 @@ export default function ScanQrCodeScreen({
         ),
       })
     );
-    console.log('before createCredential')
-    dispatch(createCredential({issuerId: currentUser?._id, revoked: false}));
+    const cred = (await dispatch(createCredential({issuerId: currentUser?._id, revoked: false}))).payload;
     dispatch(
       addMessage({
         chatId: newContactId,
         message: sendMessage(
           newContactId,
           rootsHelper?._id,
-          "You have issued a verifiable credential!",
+          `You have issued a verifiable credential ${cred.alias}!`,
           MessageType.PROMPT_ISSUED_CREDENTIAL,
           false,
-          'asdasfaadvcasdasdas'
+          { credential: cred }
         ),
       })
     );
