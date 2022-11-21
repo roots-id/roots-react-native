@@ -26,7 +26,6 @@ import { styles } from '../styles/styles';
 import { CompositeScreenProps } from '@react-navigation/core/src/types';
 import { BubbleProps } from 'react-native-gifted-chat/lib/Bubble';
 import {
-  getChatByUser,
   getCurrentUser,
   getMappedCurrentUser,
   getUserById,
@@ -47,7 +46,6 @@ export default function ChatScreen({
   const [contact, setContact] = useState<models.contact>();
   console.log('ChatScreen - got chatItem ', chat);
   const [loading, setLoading] = useState<boolean>(true);
-  const [messages, setMessages] = useState<IMessage[]>(getChatByUser(user._id));
   const [processing, setProcessing] = useState<boolean>(false);
   const currentChat = useSelector((state) => getChatById(state, user._id));
 
@@ -129,13 +127,19 @@ export default function ChatScreen({
             console.log('ChatScreen - credential revoked?');
           } else if (reply.value.endsWith(MessageType.CRED_VIEW)) {
             console.log('ChatScreen - quick reply view issued credential');
-            navigation.navigate(ROUTE_NAMES.CREDENTIAL_DETAILS);
+            const msgCurrentChat = currentChat?.messages.find(message => message._id === reply.messageId);
+            navigation.navigate(ROUTE_NAMES.CREDENTIAL_DETAILS, {
+              cred: msgCurrentChat?.data?.credential ,
+            });
           }
         } else if (reply.value.startsWith(MessageType.PROMPT_OWN_CREDENTIAL)) {
           console.log('ChatScreen - process quick reply for owned credential');
           if (reply.value.endsWith(MessageType.CRED_VIEW)) {
             console.log('ChatScreen - quick reply view imported credential');
-            navigation.navigate(ROUTE_NAMES.CREDENTIAL_DETAILS);
+            const msgCurrentChat = currentChat?.messages.find(message => message._id === reply.messageId);
+            navigation.navigate(ROUTE_NAMES.CREDENTIAL_DETAILS, {
+              cred: msgCurrentChat?.data?.credential,
+            });
           }
         } else {
           console.log(

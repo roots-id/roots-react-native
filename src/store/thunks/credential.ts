@@ -9,14 +9,13 @@ export const createCredential = createAsyncThunk(
     CREATE_CREDENTIAL,
   async (credential: any, thunkAPI: any) => {
     const state = thunkAPI.getState();
-    console.log('createCredential')
     const dummyCredential = {
         _id: state.credential.credentials.length + 1,
-        alias: `dummy${state.credential.credentials.length + 1}_credentialAlias`,
+        alias: `Dummy${state.credential.credentials.length + 1}_credentialAlias`,
         verifiedCredential: {
-          encodedSignedCredential: `dummy${state.credential.credentials.length + 1}_verifiedCredential_${Date.now()}`,
+          encodedSignedCredential: `Dummy${state.credential.credentials.length + 1}_verifiedCredential_${Date.now()}`,
           proof: {
-            hash: `dummy${state.credential.credentials.length + 1}_proofHash_${Date.now()}`,
+            hash: `Dummy${state.credential.credentials.length + 1}_proofHash_${Date.now()}`,
             index: state.credential.credentials.length,
           },
         },
@@ -24,7 +23,7 @@ export const createCredential = createAsyncThunk(
         revoked: credential.revoked
       }
     thunkAPI.dispatch(addCredential(dummyCredential));
-    return dummyCredential._id;
+    return dummyCredential;
   }
 )
 
