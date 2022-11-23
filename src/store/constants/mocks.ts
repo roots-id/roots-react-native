@@ -1,0 +1,1 @@
+export const MOCK_CONTACT_PREFIX_ID = 'did:roots:b8ff969a1bf2be51914b2bcc29121af2ae9a8cbe652b1edf3b87f2461d7eed6c'

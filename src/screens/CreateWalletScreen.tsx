@@ -1,22 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Image, Linking, Text, View } from 'react-native';
 import { Title } from 'react-native-paper';
-import { useDispatch, useSelector } from 'react-redux';
-import { faker } from '@faker-js/faker';
+import { useDispatch } from 'react-redux';
 import { CompositeScreenProps } from '@react-navigation/core/src/types';
 import FormButton from '../components/FormButton';
 import FormInput from '../components/FormInput';
 import Loading from '../components/Loading';
-
 import { displayOrHide, styles } from '../styles/styles';
 import { ROUTE_NAMES } from '../navigation';
-import { createWallet } from '../store/thunks/wallet';
+import { initiateWalletCreation } from '../store/thunks/wallet';
 import { WALLET_CREATED_SUCCESS } from '../store/action-types/wallet';
-import { createContact } from '../store/thunks/contact';
-import { initiateChat, addMessage } from '../store/slices/chat';
-import { BOTS_MSGS, BOTS_NAMES } from '../common/constants';
-import { sendMessage } from '../helpers/messages';
-import { MessageType } from '../models/constants/chat-enums';
 
 export default function CreateWalletScreen({
   route,
@@ -59,119 +52,6 @@ export default function CreateWalletScreen({
   useEffect(() => {
     checkErrors();
   }, [userName, walletName, password, confirmPassword, problemText]);
-
-  async function initiateUserAccount() {
-    const rootsHelperId = (
-      await dispatch(
-        createContact({
-          displayPictureUrl:
-            'https://avatars.githubusercontent.com/u/95590918?s=200&v=4',
-          displayName: BOTS_NAMES.ROOTS_HELPER,
-        })
-      )
-    ).payload;
-    const prismBotId = (
-      await dispatch(
-        createContact({
-          displayPictureUrl:
-            'https://avatars.githubusercontent.com/u/11140484?s=200&v=4',
-          displayName: BOTS_NAMES.PRISM_BOT,
-        })
-      )
-    ).payload;
-    const userId = (
-      await dispatch(
-        createContact({
-          displayPictureUrl: faker.internet.avatar(),
-          displayName: walletName,
-          isCurrentUser: true,
-        })
-      )
-    ).payload;
-
-    dispatch(initiateChat({ chatId: userId }));
-    dispatch(
-      addMessage({
-        chatId: userId,
-        message: sendMessage(
-          userId,
-          rootsHelperId,
-          BOTS_MSGS[0],
-          MessageType.TEXT
-        ),
-      })
-    );
-    dispatch(
-      addMessage({
-        chatId: userId,
-        message: sendMessage(
-          userId,
-          rootsHelperId,
-          BOTS_MSGS[1],
-          MessageType.TEXT
-        ),
-      })
-    );
-    dispatch(
-      addMessage({
-        chatId: userId,
-        message: sendMessage(
-          userId,
-          rootsHelperId,
-          BOTS_MSGS[2],
-          MessageType.TEXT
-        ),
-      })
-    );
-    dispatch(
-      addMessage({
-        chatId: userId,
-        message: sendMessage(
-          userId,
-          prismBotId,
-          BOTS_MSGS[3],
-          MessageType.TEXT,
-        ),
-      })
-    );
-    dispatch(
-      addMessage({
-        chatId: userId,
-        message: sendMessage(
-          userId,
-          prismBotId,
-          BOTS_MSGS[4],
-          MessageType.PROMPT_OWN_DID,
-          false,
-          '1234567890'
-        ),
-      })
-    );
-    dispatch(
-      addMessage({
-        chatId: userId,
-        message: sendMessage(
-          userId,
-          prismBotId,
-          BOTS_MSGS[5],
-          MessageType.BLOCKCHAIN_URL,
-          false,
-          'randomhash123413132'
-        ),
-      })
-    );
-    dispatch(
-      addMessage({
-        chatId: userId,
-        message: sendMessage(
-          userId,
-          prismBotId,
-          BOTS_MSGS[6],
-          MessageType.TEXT
-        ),
-      })
-    );
-  }
 
   function checkErrors() {
     const passNumeric = /\d/.test(password);
@@ -276,12 +156,11 @@ export default function CreateWalletScreen({
                 'CreateWalletScreen - Got wallet name, setting to initialized'
               );
               const response = await dispatch(
-                createWallet({ name: walletName, mnemonic, password })
+                initiateWalletCreation({ name: walletName, mnemonic, password })
               );
               if (response.payload === WALLET_CREATED_SUCCESS) {
                 setInitialized(true);
                 setProblemText('');
-                initiateUserAccount();
                 console.log('CreateWalletScreen - signing in');
                 navigation.navigate('Login');
               }

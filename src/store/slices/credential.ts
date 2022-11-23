@@ -10,7 +10,7 @@ const credentialSlice = createSlice({
       state.credentials.push(action.payload);
     },
     updateCredential(state, action: PayloadAction<any>) {
-      state.credentials[action.payload.index] = action.payload;
+      state.credentials[action.payload.index] = action.payload.credential;
     },
   },
 });

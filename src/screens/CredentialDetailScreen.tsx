@@ -12,15 +12,12 @@ import { Divider, IconButton } from 'react-native-paper';
 import * as models from '../models';
 import { styles } from '../styles/styles';
 import { CompositeScreenProps } from '@react-navigation/core/src/types';
-import {
-  decodeCredential,
-  getCredentialItem,
-} from '../models/samples/credentials';
-import { DIDS } from '../models/samples';
+import { decodeCredential } from '../models/samples/credentials';
 import { goToShowQrCode } from '../navigation/helper/navigate-to';
 import { useDispatch } from 'react-redux';
 import { updateCredentialValidation } from '../store/thunks/credential';
 const credLogo = require('../assets/vc.png');
+const discordLogo = require('../assets/discord.png');
 
 export default function CredentialDetailScreen({
   route,
@@ -28,20 +25,18 @@ export default function CredentialDetailScreen({
 }: CompositeScreenProps<any, any>) {
   console.log('cred details - route params are', JSON.stringify(route.params));
   const dispatch = useDispatch();
-  const [cred, setCred] = useState<models.credential>(
-    getCredentialItem(DIDS[0])
-  );
+  const [cred, setCred] = useState<models.credential>(route.params.cred);
   const [verified, setVerified] = useState('help-circle');
 
-  //   useEffect(() => {
-  //     console.log('cred details - initially setting cred', cred);
-  //     setCred(route.params.cred);
-  //   }, []);
+    useEffect(() => {
+      console.log('cred details - initially setting cred', cred);
+      setCred(route.params.cred);
+    }, []);
 
   const updateVerification = async () => {
     if(route.params?.cred?._id) {
-      const isRevoked = (await dispatch(updateCredentialValidation(route.params?.cred))).payload;
-      if(isRevoked){
+      const isRevoked = await dispatch(updateCredentialValidation(route.params?.cred));
+      if(isRevoked.payload){
         setVerified("close-octagon-outline")
       } else {
         setVerified("check-bold")
@@ -84,7 +79,7 @@ export default function CredentialDetailScreen({
             }
           />
         </View>
-        <Image source={credLogo} style={styles.credLogoStyle} />
+        <Image source={cred.alias === 'DISCORD HANDLE' ? discordLogo : credLogo} style={styles.credLogoStyle} />
         <FlatList
           data={Object.entries(
             decodeCredential(cred.verifiedCredential.encodedSignedCredential)
