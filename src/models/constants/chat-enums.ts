@@ -3,7 +3,8 @@ export enum MessageType {
   CREDENTIAL_JSON = 'jsonCredential',
   DID = 'didMsgType',
   PROMPT_RETRY_PROCESS = 'rootsFailedProcessingMsgType',
-  PROMPT_ACCEPT_CREDENTIAL = 'rootsAcceptCredentialMsgType',
+  PROMPT_ACCEPTED_CREDENTIAL = 'rootsAcceptedCredentialMsgType',
+  PROMPT_PREVIEW_ACCEPT_DENY_CREDENTIAL = 'rootsPreviewAcceptDenyCredentialMsgType',
   PROMPT_OWN_CREDENTIAL = 'rootsOwnCredentialMsgType',
   PROMPT_OWN_DID = 'rootsOwnDidMsgType',
   PROMPT_PUBLISH = 'rootsPromptPublishMsgType',
@@ -12,5 +13,9 @@ export enum MessageType {
   TEXT = 'textMsgType',
   CRED_VIEW = 'CRED_VIEW',
   CRED_REVOKE = 'CRED_REVOKE',
-  CRED_VERIFY = 'CRED_VERIFY'
+  CRED_VERIFY = 'CRED_VERIFY',
+  CRED_ACCEPTED = 'CRED_ACCEPTED',
+  CRED_PREVIEW = 'CRED_PREVIEW',
+  CRED_ACCEPT = 'CRED_ACCEPT',
+  CRED_DENY = 'CRED_DENY'
 }

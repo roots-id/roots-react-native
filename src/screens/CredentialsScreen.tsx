@@ -13,6 +13,7 @@ import { CompositeScreenProps } from '@react-navigation/core/src/types';
 import { ROUTE_NAMES } from '../navigation';
 import { getVerifiedCredentials } from '../store/selectors/credential';
 const credLogo = require('../assets/vc.png');
+const discordLogo = require('../assets/discord.png');
 
 const CredentialsScreen = ({
   route,
@@ -40,12 +41,12 @@ const CredentialsScreen = ({
                       })
                     }
                   >
-                    <Image source={credLogo} style={styles.credLogoStyle} />
+                    <Image source={item.alias === 'DISCORD HANDLE' ? discordLogo : credLogo} style={styles.credLogoStyle} />
                   </TouchableOpacity>
                 </SafeAreaView>
                 <SafeAreaView style={styles.container}>
                   <List.Item
-                    title={item.verifiedCredential.encodedSignedCredential}
+                    title={item.alias}
                     titleNumberOfLines={1}
                     titleStyle={styles.clickableListTitle}
                     descriptionStyle={styles.listDescription}

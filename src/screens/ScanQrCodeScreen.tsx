@@ -25,12 +25,8 @@ import { CompositeScreenProps } from '@react-navigation/core/src/types';
 import { styles } from '../styles/styles';
 import { ConfigService } from '../services';
 import { useDispatch, useSelector } from 'react-redux';
-import { createContact } from '../store/thunks/contact';
-import { addMessage, initiateChat } from '../store/slices/chat';
-import { sendMessage } from '../helpers/messages';
-import { MessageType } from '../models/constants/chat-enums';
 import { getCurrentUserContact, getRootsHelperContact } from '../store/selectors/contact';
-import { createCredential } from '../store/thunks/credential';
+import { createNewCredential, initiateNewContact } from '../store/thunks/wallet';
 
 const configService = new ConfigService();
 
@@ -56,57 +52,11 @@ export default function ScanQrCodeScreen({
   const modelType = route.params.type;
 
   const addDummyCredenial = async () => {
-    const cred = (await dispatch(createCredential({issuerId: currentUser._id, revoked: false}))).payload;
-    dispatch(
-      addMessage({
-        chatId: currentUser._id,
-        message: sendMessage(
-          currentUser._id,
-          rootsHelper?._id,
-          `You created a demo credential ${cred.alias}!`,
-          MessageType.PROMPT_ISSUED_CREDENTIAL,
-          false,
-          { credential: cred }
-        ),
-      })
-    );
+    dispatch(createNewCredential());
   };
 
-  async function addDummyContact(){
-    const newContactId = (await dispatch(
-      createContact({
-        displayPictureUrl: faker.internet.avatar(),
-        displayName: faker.internet.userName(),
-      })
-    )).payload;
-
-    dispatch(initiateChat({ chatId: newContactId }));
-
-    dispatch(
-      addMessage({
-        chatId: newContactId,
-        message: sendMessage(
-          newContactId,
-          rootsHelper?._id,
-          "To celebrate your new contact, you are issuing a verifiable credential",
-          MessageType.TEXT
-        ),
-      })
-    );
-    const cred = (await dispatch(createCredential({issuerId: currentUser?._id, revoked: false}))).payload;
-    dispatch(
-      addMessage({
-        chatId: newContactId,
-        message: sendMessage(
-          newContactId,
-          rootsHelper?._id,
-          `You have issued a verifiable credential ${cred.alias}!`,
-          MessageType.PROMPT_ISSUED_CREDENTIAL,
-          false,
-          { credential: cred }
-        ),
-      })
-    );
+  const addDummyContact = async () => {
+    dispatch(initiateNewContact());
   };
   
   const handleDemo = async () => {

@@ -25,15 +25,12 @@ import Loading from '../components/Loading';
 import { styles } from '../styles/styles';
 import { CompositeScreenProps } from '@react-navigation/core/src/types';
 import { BubbleProps } from 'react-native-gifted-chat/lib/Bubble';
-import {
-  getCurrentUser,
-  getMappedCurrentUser,
-  getUserById,
-} from '../models/samples';
 import { MessageType } from '../models/constants';
 import { ROUTE_NAMES } from '../navigation';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { getChatById } from '../store/selectors/chat';
+import { addCredentialAndNotify, denyCredentialAndNotify } from '../store/thunks/wallet';
+import { getContactById, getCurrentUserContact } from '../store/selectors/contact';
 
 export default function ChatScreen({
   route,
@@ -48,7 +45,9 @@ export default function ChatScreen({
   const [loading, setLoading] = useState<boolean>(true);
   const [processing, setProcessing] = useState<boolean>(false);
   const currentChat = useSelector((state) => getChatById(state, user._id));
-
+  const currentUser = useSelector(getCurrentUserContact);
+  const getUserById = useSelector(getContactById);
+  const dispatch = useDispatch();
   // useEffect(() => {
   //   setMessages(messages);
   // }, []);
@@ -115,7 +114,7 @@ export default function ChatScreen({
       for (const reply of replies) {
         if (reply.value.startsWith(MessageType.PROMPT_OWN_DID)) {
           console.log('ChatScreen - quick reply view did');
-          openRelationshipDetailScreen(getCurrentUser());
+          openRelationshipDetailScreen(currentUser);
         } else if (
           reply.value.startsWith(MessageType.PROMPT_ISSUED_CREDENTIAL)
         ) {
@@ -141,7 +140,33 @@ export default function ChatScreen({
               cred: msgCurrentChat?.data?.credential,
             });
           }
-        } else {
+        } else if (reply.value.startsWith(MessageType.PROMPT_PREVIEW_ACCEPT_DENY_CREDENTIAL)) {
+          console.log('ChatScreen - process quick reply for owned credential');
+          if (reply.value.endsWith(MessageType.CRED_PREVIEW)) {
+            console.log('ChatScreen - quick reply preview credential');
+            const msgCurrentChat = currentChat?.messages.find(message => message._id === reply.messageId);
+            navigation.navigate(ROUTE_NAMES.CREDENTIAL_DETAILS, {
+              cred: msgCurrentChat?.data?.credential,
+            });
+          } else if (reply.value.endsWith(MessageType.CRED_ACCEPT)) {
+            console.log('ChatScreen - quick reply accept imported credential');
+            const msgCurrentChat = currentChat?.messages.find(message => message._id === reply.messageId);
+            dispatch(addCredentialAndNotify(msgCurrentChat?.data?.credential));
+          } else if (reply.value.endsWith(MessageType.CRED_DENY)) {
+            console.log('ChatScreen - quick reply deny imported credential');
+            dispatch(denyCredentialAndNotify());
+          }
+        } else if (reply.value.startsWith(MessageType.PROMPT_ACCEPTED_CREDENTIAL)) {
+          console.log('ChatScreen - process quick reply for accepted credential');
+          if (reply.value.endsWith(MessageType.CRED_VIEW)) {
+            console.log('ChatScreen - quick reply preview credential');
+            const msgCurrentChat = currentChat?.messages.find(message => message._id === reply.messageId);
+            navigation.navigate(ROUTE_NAMES.CREDENTIAL_DETAILS, {
+              cred: msgCurrentChat?.data?.credential,
+            });
+          }
+        }
+        else {
           console.log(
             'ChatScreen - reply value not recognized, was',
             reply.value
@@ -197,7 +222,11 @@ export default function ChatScreen({
         })}
         placeholder={'Make a note...'}
         onSend={onSend}
-        user={getMappedCurrentUser()}
+        user={{
+          _id: currentUser._id,
+          name: currentUser.displayName,
+          avatar: currentUser.displayPictureUrl,
+        }}
         parsePatterns={(linkStyle) => [
           {
             type: 'url',
@@ -219,7 +248,7 @@ export default function ChatScreen({
         renderUsernameOnMessage={true}
         showAvatarForEveryMessage={true}
         onPressAvatar={(u) =>
-          openRelationshipDetailScreen(getUserById(u._id as number))
+          openRelationshipDetailScreen(getUserById(u._id))
         }
       />
     </View>

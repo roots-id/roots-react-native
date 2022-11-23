@@ -12,7 +12,7 @@ export function formatMessage(
   statusText: string,
   timeInMillis: number,
   chatId: string,
-  senderId: number,
+  senderId: string,
   system = false,
   data: any
 ): any {
@@ -55,14 +55,14 @@ function addQuickReply(msg: message) {
       ],
     };
   }
-  if (msg.type === MessageType.PROMPT_ACCEPT_CREDENTIAL) {
+  if (msg.type === MessageType.PROMPT_ACCEPTED_CREDENTIAL) {
     msg.quickReplies = {
       type: 'checkbox',
       keepIt: true,
       values: [
         {
-          title: 'Accept',
-          value: MessageType.PROMPT_ACCEPT_CREDENTIAL + 'CRED_ACCEPTED',
+          title: 'View',
+          value: MessageType.PROMPT_ACCEPTED_CREDENTIAL + 'CRED_VIEW',
           messageId: msg._id,
         },
       ],
@@ -112,6 +112,29 @@ function addQuickReply(msg: message) {
       ],
     };
   }
+  if (msg.type === MessageType.PROMPT_PREVIEW_ACCEPT_DENY_CREDENTIAL) {
+    msg.quickReplies = {
+      type: 'checkbox',
+      keepIt: true,
+      values: [
+        {
+          title: 'Preview',
+          value: MessageType.PROMPT_PREVIEW_ACCEPT_DENY_CREDENTIAL + 'CRED_PREVIEW',
+          messageId: msg._id,
+        },
+        {
+          title: 'Accept',
+          value: MessageType.PROMPT_PREVIEW_ACCEPT_DENY_CREDENTIAL + 'CRED_ACCEPT',
+          messageId: msg._id,
+        },
+        {
+          title: 'Deny',
+          value: MessageType.PROMPT_PREVIEW_ACCEPT_DENY_CREDENTIAL + 'CRED_DENY',
+          messageId: msg._id,
+        },
+      ],
+    };
+  }
   return msg;
 }
 function addMessageExtensions(msg: message) {
@@ -121,14 +144,14 @@ function addMessageExtensions(msg: message) {
 
 export function sendMessage(
   chatId: any,
-  senderId: number,
+  senderId: any,
   msgText: string,
   msgType: MessageType,
   system = false,
   data: any = {}
 ) {
   const msgTime = Date.now();
-  const msgId = createMessageId(chatId, String(senderId), msgTime);
+  const msgId = createMessageId(chatId, senderId, msgTime);
   let msg = formatMessage(msgId, msgText, msgType, msgTime, chatId, senderId, system, data);
   msg = addMessageExtensions(msg);
   return {...msg, received: true}
