@@ -142,6 +142,7 @@ export default function ChatScreen({
           }
         } else if (reply.value.startsWith(MessageType.PROMPT_PREVIEW_ACCEPT_DENY_CREDENTIAL)) {
           console.log('ChatScreen - process quick reply for owned credential');
+          const msgCurrentChat = currentChat?.messages.find(message => message._id === reply.messageId);  
           if (reply.value.endsWith(MessageType.CRED_PREVIEW)) {
             console.log('ChatScreen - quick reply preview credential');
             const msgCurrentChat = currentChat?.messages.find(message => message._id === reply.messageId);
@@ -150,11 +151,10 @@ export default function ChatScreen({
             });
           } else if (reply.value.endsWith(MessageType.CRED_ACCEPT)) {
             console.log('ChatScreen - quick reply accept imported credential');
-            const msgCurrentChat = currentChat?.messages.find(message => message._id === reply.messageId);
             dispatch(addCredentialAndNotify(msgCurrentChat?.data?.credential));
           } else if (reply.value.endsWith(MessageType.CRED_DENY)) {
             console.log('ChatScreen - quick reply deny imported credential');
-            dispatch(denyCredentialAndNotify());
+            dispatch(denyCredentialAndNotify(msgCurrentChat?.data?.credential));
           }
         } else if (reply.value.startsWith(MessageType.PROMPT_ACCEPTED_CREDENTIAL)) {
           console.log('ChatScreen - process quick reply for accepted credential');
