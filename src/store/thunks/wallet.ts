@@ -302,16 +302,15 @@ export const createNewCredential = createAsyncThunk(
 
 export const addCredentialAndNotify = createAsyncThunk(
   ADD_CREDENTIAL_AND_NOTIFY,
-  async (credential, thunkAPI) => {
+  async (credential: any, thunkAPI) => {
     const { dispatch, getState } = thunkAPI;
     const rootsHelper = getRootsHelperContact(getState());
-    const currentUser = getCurrentUserContact(getState());
     const cred = (await dispatch(addCredentialToList(credential))).payload;
     dispatch(
       addMessage({
-        chatId: currentUser._id,
+        chatId: credential.issuerId,
         message: sendMessage(
-          currentUser._id,
+          credential.issuerId,
           rootsHelper?._id,
           `Discord Social credential accepted ${cred.alias}!`,
           MessageType.PROMPT_ACCEPTED_CREDENTIAL,
@@ -325,15 +324,14 @@ export const addCredentialAndNotify = createAsyncThunk(
 
 export const denyCredentialAndNotify = createAsyncThunk(
   DENY_CREDENTIAL_AND_NOTIFY,
-  async (credential, thunkAPI) => {
+  async (credential: any, thunkAPI) => {
     const { dispatch, getState } = thunkAPI;
     const rootsHelper = getRootsHelperContact(getState());
-    const currentUser = getCurrentUserContact(getState());
     dispatch(
       addMessage({
-        chatId: currentUser._id,
+        chatId: credential.issuerId,
         message: sendMessage(
-          currentUser._id,
+          credential.issuerId,
           rootsHelper?._id,
           `Discord social credential denied!`,
           MessageType.TEXT,
