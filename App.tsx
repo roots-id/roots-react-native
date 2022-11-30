@@ -9,6 +9,13 @@ import reduxStore from './src/store';
 LogBox.ignoreLogs(['Warning: ...']); // Ignore log notification by message
 LogBox.ignoreAllLogs(); //Ignore all log notifications
 
+import { NativeModules, NativeEventEmitter } from 'react-native'
+import { useEffect } from 'react'
+import { DIDCommResolversProxy } from "@sicpa_open_source/didcomm-react-native"
+
+const { DIDCommResolversProxyModule } = NativeModules
+
+
 export const { store, persistor } = reduxStore();
 
 export default function App() {
