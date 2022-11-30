@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Animated, Text, Pressable, View } from 'react-native';
-import { IconButton, ToggleButton } from 'react-native-paper';
+import { Animated, Image, Text, Pressable, View } from 'react-native';
+import { IconButton, TextInput, ToggleButton } from 'react-native-paper';
 import { styles } from '../styles/styles';
 import { CompositeScreenProps } from '@react-navigation/core/src/types';
 import { useCardAnimation } from '@react-navigation/stack';
@@ -9,6 +9,10 @@ import { Picker } from '../components/picker';
 import { ConfigService, ServerService } from '../services';
 import { MediatorType, ServerType } from '../models/constants';
 import { ROUTE_NAMES } from '../navigation';
+import FormInput from '../components/FormInput';
+import { useDispatch, useSelector } from 'react-redux';
+import { getProfile, getIsPinProtected, getWalletPin } from '../store/selectors/wallet';
+import { changePin, changePinStatus, changeProfileInfo } from '../store/slices/wallet';
 
 const serverService = new ServerService();
 const configService = new ConfigService();
@@ -19,6 +23,11 @@ export default function SettingsScreen({
 }: CompositeScreenProps<any, any>) {
   const [demoMode, setDemoMode] = useState<boolean>();
   const [host, setHost] = useState<string>();
+  
+  const profile = useSelector(getProfile);
+  const pinProtected = useSelector(getIsPinProtected);
+  const pin = useSelector(getWalletPin)
+  const dispatch = useDispatch();
   useCardAnimation();
   useEffect(() => {
     async function getHost() {
@@ -38,6 +47,10 @@ export default function SettingsScreen({
   const handleDemoModeChange = () => {
     configService.setDemo(!configService.isDemo);
     setDemoMode(!configService.isDemo);
+  };
+
+  const handlePinProtectedChange = () => {
+    dispatch(changePinStatus(!pinProtected))
   };
 
   return (
@@ -61,6 +74,88 @@ export default function SettingsScreen({
         <Text style={[styles.titleText, styles.black]}>Settings:</Text>
         <Text />
         <View style={{ flexDirection: 'row' }}>
+          <Text style={styles.listItemCenteredBlack}>Username: </Text>
+        </View>
+        <View style={{ flexDirection: 'row' }}>
+          <FormInput
+            labelName=''
+            value={profile?.username}
+            secureTextEntry={false}
+            onChangeText={(userName: string) => {
+              dispatch(changeProfileInfo({ username: userName }))
+            }}
+            style={{
+              backgroundColor: '#251520',
+              width: 250,
+              height: 50,
+            }}
+            theme={{ colors: { text: '#e69138' } }}
+          />
+        </View>
+        <View style={{ flexDirection: 'row' }}>
+          <Text style={styles.listItemCenteredBlack}>Avatar: </Text>
+        </View>
+        <View style={{ flexDirection: 'row' }}>
+          <FormInput
+            labelName=''
+            value={profile?.avatar}
+            secureTextEntry={false}
+            onChangeText={(avatarLink: string) => {
+              dispatch(changeProfileInfo({ avatar: avatarLink }))
+            }}
+            multiline={ true }
+            keyboardType='numeric'
+            placeholder='paste avatar url here'
+            placeholderTextColor='#c1bfbc9e'
+            style={{
+              backgroundColor: '#251520',
+              width: 250,
+              height: 50,
+            }}
+            theme={{ colors: { text: '#e69138' } }}
+          />
+          <Image
+            source={{
+              uri: profile?.avatar,
+            }}
+            style={{
+              width: 65,
+              height: 65,
+              resizeMode: 'contain',
+              margin: 8,
+            }}
+          />
+        </View>
+        <View style={{ flexDirection: 'row' }}>
+          <Text style={styles.listItemCenteredBlack}>Pin Protected: </Text>
+          <ToggleButton
+            icon={pinProtected ? 'toggle-switch' : 'toggle-switch-off-outline'}
+            size={26}
+            color='#e69138'
+            value='toggle demo switch'
+            onPress={handlePinProtectedChange}
+          />
+        </View>
+        <View style={{ flexDirection: 'row' }}>
+          {pinProtected ? (
+            <FormInput
+              labelName='Pin'
+              value={pin}
+              secureTextEntry={false}
+              onChangeText={(userPin: string) => {
+                dispatch(changePin(userPin))
+              }}
+              keyboardType='numeric'
+              style={{
+                backgroundColor: '#251520',
+                width: 250,
+                height: 50,
+              }}
+              theme={{ colors: { text: '#e69138' } }}
+            />
+          ) : null}
+        </View>
+        <View style={{ flexDirection: 'row', marginTop: 10 }}>
           <Text style={styles.listItemCenteredBlack}>Server: </Text>
           <Picker
             itemList={[

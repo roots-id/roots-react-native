@@ -15,7 +15,7 @@ const rootReducer = combineReducers({
 
 const persistConfig = {
   key: 'root',
-  blacklist: ["credential", "contact", "wallet"], // for now keeping these blacklisted to simulate experience each time app is opened
+  blacklist: ["credential", "chat","contact", "wallet"], // for now keeping these blacklisted to simulate experience each time app is opened
   version: 1,
   storage: AsyncStorage,
 };

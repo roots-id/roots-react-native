@@ -2,7 +2,7 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import { faker } from '@faker-js/faker';
 import { BOTS_MSGS, BOTS_NAMES } from '../../common/constants';
 import { WALLET_CREATED_SUCCESS } from '../action-types/wallet';
-import { addWallet } from '../slices/wallet';
+import { addProfile, addWallet } from '../slices/wallet';
 import { createContact } from './contact';
 import { addMessage, initiateChat } from '../slices/chat';
 import { MessageType } from '../../models/constants/chat-enums';
@@ -68,13 +68,13 @@ export const initiateWalletCreation = createAsyncThunk(
     const userId = (
       await thunkAPI.dispatch(
         createContact({
-          displayPictureUrl: faker.internet.avatar(),
-          displayName: wallet.name,
+          displayPictureUrl: 'https://avatars.githubusercontent.com/u/95590918?s=200&v=4',
+          displayName: 'Activity Log',
           isCurrentUser: true,
         })
       )
     ).payload;
-
+    thunkAPI.dispatch(addProfile({ _id: userId, avatar: 'https://avatars.githubusercontent.com/u/95590918?s=200&v=4', username: '' }))
     thunkAPI.dispatch(initiateChat({ chatId: userId }));
     thunkAPI.dispatch(
       addMessage({
@@ -109,54 +109,54 @@ export const initiateWalletCreation = createAsyncThunk(
         ),
       })
     );
-    thunkAPI.dispatch(
-      addMessage({
-        chatId: userId,
-        message: sendMessage(
-          userId,
-          prismBotId,
-          BOTS_MSGS[3],
-          MessageType.TEXT
-        ),
-      })
-    );
-    thunkAPI.dispatch(
-      addMessage({
-        chatId: userId,
-        message: sendMessage(
-          userId,
-          prismBotId,
-          BOTS_MSGS[4],
-          MessageType.PROMPT_OWN_DID,
-          false,
-          '1234567890'
-        ),
-      })
-    );
-    thunkAPI.dispatch(
-      addMessage({
-        chatId: userId,
-        message: sendMessage(
-          userId,
-          prismBotId,
-          BOTS_MSGS[5],
-          MessageType.BLOCKCHAIN_URL,
-          false,
-          'randomhash123413132'
-        ),
-      })
-    );
-    thunkAPI.dispatch(
-      addMessage({
-        chatId: userId,
-        message: sendMessage(
-          userId,
-          prismBotId,
-          BOTS_MSGS[6],
-          MessageType.TEXT
-        ),
-      })
-    );
+    // thunkAPI.dispatch(
+    //   addMessage({
+    //     chatId: userId,
+    //     message: sendMessage(
+    //       userId,
+    //       prismBotId,
+    //       BOTS_MSGS[3],
+    //       MessageType.TEXT
+    //     ),
+    //   })
+    // );
+    // thunkAPI.dispatch(
+    //   addMessage({
+    //     chatId: userId,
+    //     message: sendMessage(
+    //       userId,
+    //       prismBotId,
+    //       BOTS_MSGS[4],
+    //       MessageType.PROMPT_OWN_DID,
+    //       false,
+    //       '1234567890'
+    //     ),
+    //   })
+    // );
+    // thunkAPI.dispatch(
+    //   addMessage({
+    //     chatId: userId,
+    //     message: sendMessage(
+    //       userId,
+    //       prismBotId,
+    //       BOTS_MSGS[5],
+    //       MessageType.BLOCKCHAIN_URL,
+    //       false,
+    //       'randomhash123413132'
+    //     ),
+    //   })
+    // );
+    // thunkAPI.dispatch(
+    //   addMessage({
+    //     chatId: userId,
+    //     message: sendMessage(
+    //       userId,
+    //       prismBotId,
+    //       BOTS_MSGS[6],
+    //       MessageType.TEXT
+    //     ),
+    //   })
+    // );
 
     const discordSocialIssuerId = (
       await thunkAPI.dispatch(
@@ -167,7 +167,7 @@ export const initiateWalletCreation = createAsyncThunk(
         })
       )
     ).payload;
-
+        console.log('discordSocialIssuerId', discordSocialIssuerId);
     thunkAPI.dispatch(initiateChat({ chatId: discordSocialIssuerId }));
     const today = new Date(Date.now());
     const discordCreds = {

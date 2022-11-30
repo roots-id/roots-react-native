@@ -1,6 +1,5 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import CreateWalletScreen from '../screens/CreateWalletScreen';
 import LoginScreen from '../screens/LoginScreen';
 import { ROUTE_NAMES } from './constants';
@@ -9,7 +8,6 @@ import SaveScreen from '../screens/SaveScreen';
 import { DevStack } from './dev-stack';
 
 const Stack = createStackNavigator();
-const Tab = createBottomTabNavigator();
 
 export default function AuthStack() {
   console.log('AuthStack - Determining which auth screen to use.');
