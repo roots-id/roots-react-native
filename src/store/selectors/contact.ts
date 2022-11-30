@@ -8,7 +8,7 @@ export const getContacts = createSelector(contactSelector, (state) => {
     (contact) =>
       contact.displayName !== BOTS_NAMES.ROOTS_HELPER &&
       contact.displayName !== BOTS_NAMES.PRISM_BOT
-  );
+  ).map(contact => contact.isCurrentUser ? {...contact, displayName: 'Activity Log'} : contact);
 });
 
 export const getCurrentUserContact = createSelector(

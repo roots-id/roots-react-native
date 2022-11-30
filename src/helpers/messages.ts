@@ -148,11 +148,12 @@ export function sendMessage(
   msgText: string,
   msgType: MessageType,
   system = false,
-  data: any = {}
+  data: any = {},
+  received = true
 ) {
   const msgTime = Date.now();
   const msgId = createMessageId(chatId, senderId, msgTime);
   let msg = formatMessage(msgId, msgText, msgType, msgTime, chatId, senderId, system, data);
   msg = addMessageExtensions(msg);
-  return {...msg, received: true}
+  return {...msg, received}
 }
