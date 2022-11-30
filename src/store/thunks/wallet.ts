@@ -2,7 +2,7 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import { faker } from '@faker-js/faker';
 import { BOTS_MSGS, BOTS_NAMES } from '../../common/constants';
 import { WALLET_CREATED_SUCCESS } from '../action-types/wallet';
-import { addProfile, addWallet } from '../slices/wallet';
+import { addProfile, addWallet, changeProfileInfo } from '../slices/wallet';
 import { createContact } from './contact';
 import { addMessage, initiateChat } from '../slices/chat';
 import { MessageType } from '../../models/constants/chat-enums';
@@ -16,6 +16,7 @@ import {
   getCurrentUserContact,
   getRootsHelperContact,
 } from '../selectors/contact';
+import { updateContact } from '../slices/contact';
 
 const WALLET_NAME_STORAGE_KEY = 'primaryRootsWalletStorageNameKey';
 
@@ -26,6 +27,8 @@ const INITIATE_CONTACT = `${BASE_WALLET}initiateContact`;
 const CREATE_NEW_CREDENTIAL = `${BASE_WALLET}createNewCredential`;
 const ADD_CREDENTIAL_AND_NOTIFY = `${BASE_WALLET}addCredentialAndNotify`;
 const DENY_CREDENTIAL_AND_NOTIFY = `${BASE_WALLET}denyCredentialAndNotify`;
+const UPDATE_PROFILE_AND_NOTIFY = `${BASE_WALLET}updateProfileAndNotify`;
+
 
 interface CreateWalletDto {
   name: string;
@@ -69,12 +72,12 @@ export const initiateWalletCreation = createAsyncThunk(
       await thunkAPI.dispatch(
         createContact({
           displayPictureUrl: 'https://avatars.githubusercontent.com/u/95590918?s=200&v=4',
-          displayName: 'Activity Log',
+          displayName: '',
           isCurrentUser: true,
         })
       )
     ).payload;
-    thunkAPI.dispatch(addProfile({ _id: userId, avatar: 'https://avatars.githubusercontent.com/u/95590918?s=200&v=4', username: '' }))
+    thunkAPI.dispatch(addProfile({ _id: userId, displayPictureUrl: 'https://avatars.githubusercontent.com/u/95590918?s=200&v=4', displayName: '' }))
     thunkAPI.dispatch(initiateChat({ chatId: userId }));
     thunkAPI.dispatch(
       addMessage({
@@ -336,6 +339,28 @@ export const denyCredentialAndNotify = createAsyncThunk(
           `Discord social credential denied!`,
           MessageType.TEXT,
           false
+        ),
+      })
+    );
+  }
+);
+
+export const updateProfileInfo = createAsyncThunk(
+  UPDATE_PROFILE_AND_NOTIFY,
+  async (profile: any, thunkAPI) => {
+    const { dispatch, getState } = thunkAPI;
+    const rootsHelper = getRootsHelperContact(getState());
+    const currentUser = getCurrentUserContact(getState());
+    dispatch(changeProfileInfo({...profile.data}));
+    dispatch(updateContact({ _id: currentUser?._id, ...profile.data}));
+    dispatch(
+      addMessage({
+        chatId: currentUser?._id,
+        message: sendMessage(
+          currentUser?._id,
+          rootsHelper?._id,
+          profile.message,
+          MessageType.TEXT
         ),
       })
     );

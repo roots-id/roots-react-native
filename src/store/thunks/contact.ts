@@ -1,4 +1,5 @@
 import { createAsyncThunk } from '@reduxjs/toolkit'
+import uuid from 'react-native-uuid';
 import { MOCK_CONTACT_PREFIX_ID } from '../constants/mocks';
 import { addContact } from '../slices/contact';
 
@@ -9,7 +10,7 @@ export const createContact = createAsyncThunk(
     CREATE_CONTACT,
   async (contact: any, thunkAPI: any) => {
     const dummyContact = {
-        _id: `${MOCK_CONTACT_PREFIX_ID}:${Date.now()}`,
+        _id: `${MOCK_CONTACT_PREFIX_ID}:${uuid.v4()}`,
         displayPictureUrl: contact.displayPictureUrl,
         displayName: contact.displayName,
         ...(contact.isCurrentUser ? { isCurrentUser: true} : {})

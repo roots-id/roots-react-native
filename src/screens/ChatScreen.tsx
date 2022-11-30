@@ -29,8 +29,15 @@ import { MessageType } from '../models/constants';
 import { ROUTE_NAMES } from '../navigation';
 import { useDispatch, useSelector } from 'react-redux';
 import { getChatById } from '../store/selectors/chat';
-import { addCredentialAndNotify, denyCredentialAndNotify } from '../store/thunks/wallet';
-import { getContactById, getCurrentUserContact } from '../store/selectors/contact';
+import {
+  addCredentialAndNotify,
+  denyCredentialAndNotify,
+} from '../store/thunks/wallet';
+import {
+  getContactById,
+  getCurrentUserContact,
+} from '../store/selectors/contact';
+import { sendMessageToChat } from '../store/thunks/chat';
 
 export default function ChatScreen({
   route,
@@ -122,30 +129,41 @@ export default function ChatScreen({
             console.log(
               'ChatScreen - process quick reply for revoking credential'
             );
-            console.log('reply is here', reply)
             console.log('ChatScreen - credential revoked?');
           } else if (reply.value.endsWith(MessageType.CRED_VIEW)) {
             console.log('ChatScreen - quick reply view issued credential');
-            const msgCurrentChat = currentChat?.messages.find(message => message._id === reply.messageId);
+            const msgCurrentChat = currentChat?.messages.find(
+              (message) => message._id === reply.messageId
+            );
             navigation.navigate(ROUTE_NAMES.CREDENTIAL_DETAILS, {
-              cred: msgCurrentChat?.data?.credential ,
+              cred: msgCurrentChat?.data?.credential,
             });
           }
         } else if (reply.value.startsWith(MessageType.PROMPT_OWN_CREDENTIAL)) {
           console.log('ChatScreen - process quick reply for owned credential');
           if (reply.value.endsWith(MessageType.CRED_VIEW)) {
             console.log('ChatScreen - quick reply view imported credential');
-            const msgCurrentChat = currentChat?.messages.find(message => message._id === reply.messageId);
+            const msgCurrentChat = currentChat?.messages.find(
+              (message) => message._id === reply.messageId
+            );
             navigation.navigate(ROUTE_NAMES.CREDENTIAL_DETAILS, {
               cred: msgCurrentChat?.data?.credential,
             });
           }
-        } else if (reply.value.startsWith(MessageType.PROMPT_PREVIEW_ACCEPT_DENY_CREDENTIAL)) {
+        } else if (
+          reply.value.startsWith(
+            MessageType.PROMPT_PREVIEW_ACCEPT_DENY_CREDENTIAL
+          )
+        ) {
           console.log('ChatScreen - process quick reply for owned credential');
-          const msgCurrentChat = currentChat?.messages.find(message => message._id === reply.messageId);  
+          const msgCurrentChat = currentChat?.messages.find(
+            (message) => message._id === reply.messageId
+          );
           if (reply.value.endsWith(MessageType.CRED_PREVIEW)) {
             console.log('ChatScreen - quick reply preview credential');
-            const msgCurrentChat = currentChat?.messages.find(message => message._id === reply.messageId);
+            const msgCurrentChat = currentChat?.messages.find(
+              (message) => message._id === reply.messageId
+            );
             navigation.navigate(ROUTE_NAMES.CREDENTIAL_DETAILS, {
               cred: msgCurrentChat?.data?.credential,
             });
@@ -156,17 +174,22 @@ export default function ChatScreen({
             console.log('ChatScreen - quick reply deny imported credential');
             dispatch(denyCredentialAndNotify(msgCurrentChat?.data?.credential));
           }
-        } else if (reply.value.startsWith(MessageType.PROMPT_ACCEPTED_CREDENTIAL)) {
-          console.log('ChatScreen - process quick reply for accepted credential');
+        } else if (
+          reply.value.startsWith(MessageType.PROMPT_ACCEPTED_CREDENTIAL)
+        ) {
+          console.log(
+            'ChatScreen - process quick reply for accepted credential'
+          );
           if (reply.value.endsWith(MessageType.CRED_VIEW)) {
             console.log('ChatScreen - quick reply preview credential');
-            const msgCurrentChat = currentChat?.messages.find(message => message._id === reply.messageId);
+            const msgCurrentChat = currentChat?.messages.find(
+              (message) => message._id === reply.messageId
+            );
             navigation.navigate(ROUTE_NAMES.CREDENTIAL_DETAILS, {
               cred: msgCurrentChat?.data?.credential,
             });
           }
-        }
-        else {
+        } else {
           console.log(
             'ChatScreen - reply value not recognized, was',
             reply.value
@@ -206,6 +229,16 @@ export default function ChatScreen({
   //   }
 
   const onSend = useCallback((messages = []) => {
+    messages.forEach((message) => {
+      dispatch(
+        sendMessageToChat({
+          senderId: currentUser?._id,
+          chatId: currentChat?._id,
+          message: message.text,
+          type: MessageType.TEXT
+        })
+      );
+    });
     // setMessages((previousMessages) =>
     //   GiftedChat.append(previousMessages, messages)
     // );
@@ -227,6 +260,8 @@ export default function ChatScreen({
           name: currentUser.displayName,
           avatar: currentUser.displayPictureUrl,
         }}
+        showUserAvatar={ true }
+        renderUsernameOnMessage={ true }
         parsePatterns={(linkStyle) => [
           {
             type: 'url',
@@ -245,11 +280,8 @@ export default function ChatScreen({
           <Text style={{ color: '#e69138', fontSize: 18 }}>Confirm</Text>
         )}
         // quickReplyStyle={{backgroundColor: '#e69138',borderColor: '#e69138',elevation: 3}}
-        renderUsernameOnMessage={true}
         showAvatarForEveryMessage={true}
-        onPressAvatar={(u) =>
-          openRelationshipDetailScreen(getUserById(u._id))
-        }
+        onPressAvatar={(u) => openRelationshipDetailScreen(getUserById(u._id))}
       />
     </View>
   );

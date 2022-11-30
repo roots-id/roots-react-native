@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Animated, Image, Text, Pressable, View } from 'react-native';
-import { IconButton, TextInput, ToggleButton } from 'react-native-paper';
+import { IconButton, ToggleButton } from 'react-native-paper';
 import { styles } from '../styles/styles';
 import { CompositeScreenProps } from '@react-navigation/core/src/types';
 import { useCardAnimation } from '@react-navigation/stack';
@@ -11,8 +11,16 @@ import { MediatorType, ServerType } from '../models/constants';
 import { ROUTE_NAMES } from '../navigation';
 import FormInput from '../components/FormInput';
 import { useDispatch, useSelector } from 'react-redux';
-import { getProfile, getIsPinProtected, getWalletPin } from '../store/selectors/wallet';
-import { changePin, changePinStatus, changeProfileInfo } from '../store/slices/wallet';
+import {
+  getProfile,
+  getIsPinProtected,
+  getWalletPin,
+} from '../store/selectors/wallet';
+import {
+  changePin,
+  changePinStatus,
+} from '../store/slices/wallet';
+import { updateProfileInfo } from '../store/thunks/wallet';
 
 const serverService = new ServerService();
 const configService = new ConfigService();
@@ -23,10 +31,12 @@ export default function SettingsScreen({
 }: CompositeScreenProps<any, any>) {
   const [demoMode, setDemoMode] = useState<boolean>();
   const [host, setHost] = useState<string>();
-  
+  const [username, setUsername] = useState('');
+  const [avatar, setAvatar] = useState('');
+
   const profile = useSelector(getProfile);
   const pinProtected = useSelector(getIsPinProtected);
-  const pin = useSelector(getWalletPin)
+  const pin = useSelector(getWalletPin);
   const dispatch = useDispatch();
   useCardAnimation();
   useEffect(() => {
@@ -42,7 +52,17 @@ export default function SettingsScreen({
 
     getHost();
     getDemo();
+
+    if(profile?.displayName) {
+      setUsername(profile?.displayName)
+    }
+
+    if(profile?.displayPictureUrl) {
+      setAvatar(profile?.displayPictureUrl)
+    }
   }, []);
+
+  
 
   const handleDemoModeChange = () => {
     configService.setDemo(!configService.isDemo);
@@ -50,7 +70,15 @@ export default function SettingsScreen({
   };
 
   const handlePinProtectedChange = () => {
-    dispatch(changePinStatus(!pinProtected))
+    dispatch(changePinStatus(!pinProtected));
+  };
+
+  const handleUsernameChange = () => {
+    dispatch(updateProfileInfo({ data: { displayName: username }, message: `Username has been updated to ${username}` }));
+  };
+
+  const handleAvatarChange = () => {
+    dispatch(updateProfileInfo({ data: { displayPictureUrl: avatar }, message: `Avatar picture has been updated` }));
   };
 
   return (
@@ -75,15 +103,19 @@ export default function SettingsScreen({
         <Text />
         <View style={{ flexDirection: 'row' }}>
           <Text style={styles.listItemCenteredBlack}>Username: </Text>
+          <IconButton
+            icon='content-save'
+            size={18}
+            color='#e69138'
+            onPress={handleUsernameChange}
+          />
         </View>
         <View style={{ flexDirection: 'row' }}>
           <FormInput
             labelName=''
-            value={profile?.username}
+            value={username}
             secureTextEntry={false}
-            onChangeText={(userName: string) => {
-              dispatch(changeProfileInfo({ username: userName }))
-            }}
+            onChangeText={(userName: string) => setUsername(userName)}
             style={{
               backgroundColor: '#251520',
               width: 250,
@@ -94,16 +126,20 @@ export default function SettingsScreen({
         </View>
         <View style={{ flexDirection: 'row' }}>
           <Text style={styles.listItemCenteredBlack}>Avatar: </Text>
+          <IconButton
+            icon='content-save'
+            size={18}
+            color='#e69138'
+            onPress={handleAvatarChange}
+          />
         </View>
         <View style={{ flexDirection: 'row' }}>
           <FormInput
             labelName=''
-            value={profile?.avatar}
+            value={avatar}
             secureTextEntry={false}
-            onChangeText={(avatarLink: string) => {
-              dispatch(changeProfileInfo({ avatar: avatarLink }))
-            }}
-            multiline={ true }
+            onChangeText={(avatarLink: string) => setAvatar(avatarLink)}
+            multiline={true}
             keyboardType='numeric'
             placeholder='paste avatar url here'
             placeholderTextColor='#c1bfbc9e'
@@ -116,7 +152,7 @@ export default function SettingsScreen({
           />
           <Image
             source={{
-              uri: profile?.avatar,
+              uri: avatar,
             }}
             style={{
               width: 65,
@@ -143,7 +179,7 @@ export default function SettingsScreen({
               value={pin}
               secureTextEntry={false}
               onChangeText={(userPin: string) => {
-                dispatch(changePin(userPin))
+                dispatch(changePin(userPin));
               }}
               keyboardType='numeric'
               style={{
