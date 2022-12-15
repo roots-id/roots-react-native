@@ -245,7 +245,7 @@ export default function ChatScreen({
   }, []);
 
   return (
-    <View style={{ backgroundColor: '#251520', flex: 1, display: 'flex' }}>
+    <View style={{ backgroundColor: '#000000', flex: 1, display: 'flex' }}>
       <GiftedChat
         isTyping={processing}
         inverted={false}
@@ -253,7 +253,7 @@ export default function ChatScreen({
         messages={currentChat?.messages?.sort((a, b) => {
           return a.createdAt < b.createdAt ? -1 : 1;
         })}
-        placeholder={'Make a note...'}
+        placeholder={'Tap to type...'}
         onSend={onSend}
         user={{
           _id: currentUser._id,

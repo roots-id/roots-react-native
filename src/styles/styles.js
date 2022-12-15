@@ -32,8 +32,8 @@ export const styles = StyleSheet.create({
         color: '#c66108',
     },
     clickableListTitle: {
-        fontSize: 22,
-        color: '#e69138',
+        fontSize: 18,
+        color: '#ffffff',
     },
     closeButtonContainer: {
         flexDirection: "row",
@@ -41,12 +41,12 @@ export const styles = StyleSheet.create({
         justifyContent: "flex-end"
     },
     container: {
-        backgroundColor: '#251520',
+        backgroundColor: '#000000',
         flex: 1,
         justifyContent: 'center',
     },
     containerCenter: {
-        backgroundColor: '#251520',
+        backgroundColor: '#000000',
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
@@ -173,7 +173,7 @@ export const styles = StyleSheet.create({
         color: 'pink',
     },
     centeredContainer: {
-        backgroundColor: '#251520',
+        backgroundColor: '#000000',
         flex: 1,
         padding: 16,
         borderRadius: 3,

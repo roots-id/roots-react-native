@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from "react";
 import {
   Animated,
   FlatList,
@@ -7,97 +7,111 @@ import {
   Pressable,
   View,
   ScrollView,
-} from 'react-native';
-import { Divider, IconButton } from 'react-native-paper';
-import * as models from '../models';
-import { styles } from '../styles/styles';
-import { CompositeScreenProps } from '@react-navigation/core/src/types';
-import { decodeCredential } from '../models/samples/credentials';
-import { goToShowQrCode } from '../navigation/helper/navigate-to';
-import { useDispatch } from 'react-redux';
-import { updateCredentialValidation } from '../store/thunks/credential';
-const credLogo = require('../assets/vc.png');
-const discordLogo = require('../assets/discord.png');
+} from "react-native";
+import { Divider, IconButton } from "react-native-paper";
+import ActionSheet from "react-native-actions-sheet";
+import * as models from "../models";
+import { styles } from "../styles/styles";
+import { CompositeScreenProps } from "@react-navigation/core/src/types";
+import { decodeCredential } from "../models/samples/credentials";
+import { goToShowQrCode } from "../navigation/helper/navigate-to";
+import { useDispatch } from "react-redux";
+import { updateCredentialValidation } from "../store/thunks/credential";
+const credLogo = require("../assets/vc.png");
+const discordLogo = require("../assets/discord.png");
 
 export default function CredentialDetailScreen({
   route,
   navigation,
 }: CompositeScreenProps<any, any>) {
-  console.log('cred details - route params are', JSON.stringify(route.params));
+  console.log("cred details - route params are", JSON.stringify(route.params));
   const dispatch = useDispatch();
   const [cred, setCred] = useState<models.credential>(route.params.cred);
-  const [verified, setVerified] = useState('help-circle');
+  const [verified, setVerified] = useState("help-circle");
+  const actionSheetRef = useRef(null);
 
-    useEffect(() => {
-      console.log('cred details - initially setting cred', cred);
-      setCred(route.params.cred);
-    }, []);
+  useEffect(() => {
+    console.log("cred details - initially setting cred", cred);
+    setCred(route.params.cred);
+  }, []);
 
   const updateVerification = async () => {
-    if(route.params?.cred?._id) {
-      const isRevoked = await dispatch(updateCredentialValidation(route.params?.cred));
-      if(isRevoked.payload){
-        setVerified("close-octagon-outline")
+    if (route.params?.cred?._id) {
+      const isRevoked = await dispatch(
+        updateCredentialValidation(route.params?.cred)
+      );
+      if (isRevoked.payload) {
+        setVerified("close-octagon-outline");
       } else {
-        setVerified("check-bold")
+        setVerified("check-bold");
       }
     }
-  }
+  };
 
   return (
-    <View
-      style={{
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
-      }}
-    >
-      <Pressable style={styles.pressable} onPress={navigation.goBack} />
-      <View style={styles.closeButtonContainer}>
-        <IconButton
-          icon='close-circle'
-          size={36}
-          color='#e69138'
-          onPress={() => navigation.goBack()}
-        />
-      </View>
-      <Animated.View style={styles.viewAnimated}>
-        <View style={{ flexDirection: 'row' }}>
-          <IconButton icon={verified} size={36} color='#e69138' onPress={updateVerification} />
+    <ActionSheet ref={actionSheetRef}>
+      <View
+        style={{
+          flex: 1,
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <Pressable style={styles.pressable} onPress={navigation.goBack} />
+        <View style={styles.closeButtonContainer}>
           <IconButton
-            icon='qrcode'
+            icon="close-circle"
             size={36}
-            color='#e69138'
-            onPress={() =>
-              goToShowQrCode(navigation, {
-                encodedSignedCredential: 'dummy_vcEncodedSignedCredential',
-                proof: {
-                  hash: 'dummy_proofHash',
-                  index: 0,
-                },
-              })
-            }
+            color="#e69138"
+            onPress={() => navigation.goBack()}
           />
         </View>
-        <Image source={cred.alias === 'DISCORD HANDLE' ? discordLogo : credLogo} style={styles.credLogoStyle} />
-        <FlatList
-          data={Object.entries(
-            decodeCredential(cred.verifiedCredential.encodedSignedCredential)
-              .credentialSubject
-          )}
-          keyExtractor={([key, val]) => key}
-          ItemSeparatorComponent={() => <Divider />}
-          renderItem={(item) => {
-            return (
-              <ScrollView style={styles.scrollableModal}>
-                <Text style={{ color: 'black' }}>
-                  {item.item[0] + ': ' + item.item[1]}
-                </Text>
-              </ScrollView>
-            );
-          }}
-        />
-      </Animated.View>
-    </View>
+        <Animated.View style={styles.viewAnimated}>
+          <View style={{ flexDirection: "row" }}>
+            <IconButton
+              icon={verified}
+              size={36}
+              color="#e69138"
+              onPress={updateVerification}
+            />
+            <IconButton
+              icon="qrcode"
+              size={36}
+              color="#e69138"
+              onPress={() =>
+                goToShowQrCode(navigation, {
+                  encodedSignedCredential: "dummy_vcEncodedSignedCredential",
+                  proof: {
+                    hash: "dummy_proofHash",
+                    index: 0,
+                  },
+                })
+              }
+            />
+          </View>
+          <Image
+            source={cred.alias === "DISCORD HANDLE" ? discordLogo : credLogo}
+            style={styles.credLogoStyle}
+          />
+          <FlatList
+            data={Object.entries(
+              decodeCredential(cred.verifiedCredential.encodedSignedCredential)
+                .credentialSubject
+            )}
+            keyExtractor={([key, val]) => key}
+            ItemSeparatorComponent={() => <Divider />}
+            renderItem={(item) => {
+              return (
+                <ScrollView style={styles.scrollableModal}>
+                  <Text style={{ color: "black" }}>
+                    {item.item[0] + ": " + item.item[1]}
+                  </Text>
+                </ScrollView>
+              );
+            }}
+          />
+        </Animated.View>
+      </View>
+    </ActionSheet>
   );
 }
