@@ -76,7 +76,7 @@ export default function LoginScreen({
       <Text></Text>
       <View
         style={{
-          backgroundColor: '#251520',
+          backgroundColor: '#000000',
           flex: 1,
           flexDirection: 'row',
           justifyContent: 'space-between',
@@ -89,18 +89,18 @@ export default function LoginScreen({
           <Button
             title='Need Help?'
             onPress={handleOpenWithLinking}
-            color={'#251520'}
+            color={'#000000'}
           />
         </View>
         <View
           style={{
-            backgroundColor: '#251520',
+            backgroundColor: '#000000',
             flex: 1,
             marginLeft: 5,
             marginRight: 10,
           }}
         >
-          <Button title='Settings' onPress={handleSettings} color={'#251520'} />
+          <Button title='Settings' onPress={handleSettings} color={'#000000'} />
         </View>
       </View>
     </View>

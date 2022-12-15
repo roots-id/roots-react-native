@@ -28,11 +28,11 @@ export default function IconActions(...props) {
         visible={visible}
         onDismiss={closeMenu}
         contentStyle={{
-          backgroundColor: "#150510",
+          backgroundColor: "#000000",
           display: "flex",
           alignItems: "center",
         }}
-        // style={{backgroundColor: '#150510'}}
+        // style={{backgroundColor: '#000000'}}
         anchor={
           <IconButton
             onPress={openMenu}
@@ -44,7 +44,7 @@ export default function IconActions(...props) {
       >
         <Menu.Item
           onPress={() => console.log("onPress clicked")}
-          style={{ backgroundColor: "#150510" }}
+          style={{ backgroundColor: "#000000" }}
           title={<IconButton icon="account" size={28} color="#e69138" />}
         />
         <Menu.Item
@@ -52,7 +52,7 @@ export default function IconActions(...props) {
             navigation.navigate(ROUTE_NAMES.SCAN_QR_CODE, { type: scan });
             closeMenu();
           }}
-          style={{ backgroundColor: "#150510" }}
+          style={{ backgroundColor: "#000000" }}
           title={
             <IconButton
               icon="qrcode-scan"
@@ -71,7 +71,7 @@ export default function IconActions(...props) {
             closeMenu();
           }}
           title={<IconButton icon="cog-outline" size={28} color="#e69138" />}
-          style={{ backgroundColor: "#150510" }}
+          style={{ backgroundColor: "#000000" }}
         />
         <Menu.Item
           onPress={() => {
@@ -79,7 +79,7 @@ export default function IconActions(...props) {
             closeMenu();
           }}
           title={<IconButton icon="sitemap" size={28} color="#e69138" />}
-          style={{ backgroundColor: "#150510" }}
+          style={{ backgroundColor: "#000000" }}
         />
       </Menu>
     </View>

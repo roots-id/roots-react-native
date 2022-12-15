@@ -117,7 +117,7 @@ export default function SettingsScreen({
             secureTextEntry={false}
             onChangeText={(userName: string) => setUsername(userName)}
             style={{
-              backgroundColor: '#251520',
+              backgroundColor: '#000000',
               width: 250,
               height: 50,
             }}
@@ -144,7 +144,7 @@ export default function SettingsScreen({
             placeholder='paste avatar url here'
             placeholderTextColor='#c1bfbc9e'
             style={{
-              backgroundColor: '#251520',
+              backgroundColor: '#000000',
               width: 250,
               height: 50,
             }}
@@ -183,7 +183,7 @@ export default function SettingsScreen({
               }}
               keyboardType='numeric'
               style={{
-                backgroundColor: '#251520',
+                backgroundColor: '#000000',
                 width: 250,
                 height: 50,
               }}
