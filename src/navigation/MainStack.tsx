@@ -176,10 +176,6 @@ export default function MainStack() {
     >
       <Stack.Group>
         <Stack.Screen name={ROUTE_NAMES.MAIN_TABS} component={Main} />
-        <Stack.Screen
-          name={ROUTE_NAMES.CREDENTIAL_DETAILS}
-          component={CredentialDetailScreen}
-        />
       </Stack.Group>
       <Stack.Group
         navigationKey={"init"}
@@ -188,6 +184,10 @@ export default function MainStack() {
         <Stack.Screen
           name={ROUTE_NAMES.RELATIONSHIP_DETAILS}
           component={RelationshipDetailScreen}
+        />
+        <Stack.Screen
+          name={ROUTE_NAMES.CREDENTIAL_DETAILS}
+          component={CredentialDetailScreen}
         />
         <Stack.Screen name={ROUTE_NAMES.SCAN_QR_CODE} component={ScanQrCode} />
         <Stack.Screen

@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
+    "start-clean": "expo start -c",
     "start": "expo start",
     "android": "expo start --android",
     "ios": "expo start --ios",
@@ -10,6 +11,7 @@
   },
   "dependencies": {
     "@expo/webpack-config": "^0.17.0",
+    "@gorhom/bottom-sheet": "^4.4.5",
     "@react-native-async-storage/async-storage": "~1.17.3",
     "@react-native-picker/picker": "^2.4.8",
     "@react-navigation/bottom-tabs": "^6.4.0",
@@ -27,7 +29,6 @@
     "react": "18.0.0",
     "react-dom": "18.0.0",
     "react-native": "0.69.5",
-    "react-native-actions-sheet": "^0.8.10",
     "react-native-gesture-handler": "~2.5.0",
     "react-native-gifted-chat": "^1.0.4",
     "react-native-paper": "^4.12.4",
@@ -39,7 +40,8 @@
     "react-redux": "^8.0.4",
     "redux-persist": "^6.0.0",
     "redux-thunk": "^2.4.1",
-    "typescript": "^4.6.3"
+    "typescript": "^4.6.3",
+    "react-native-reanimated": "~2.9.1"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",

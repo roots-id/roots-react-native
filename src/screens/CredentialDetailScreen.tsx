@@ -1,4 +1,10 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, {
+  useEffect,
+  useState,
+  useRef,
+  useMemo,
+  useCallback,
+} from "react";
 import {
   Animated,
   FlatList,
@@ -9,7 +15,7 @@ import {
   ScrollView,
 } from "react-native";
 import { Divider, IconButton } from "react-native-paper";
-import ActionSheet from "react-native-actions-sheet";
+import BottomSheet from "@gorhom/bottom-sheet";
 import * as models from "../models";
 import { styles } from "../styles/styles";
 import { CompositeScreenProps } from "@react-navigation/core/src/types";
@@ -28,7 +34,16 @@ export default function CredentialDetailScreen({
   const dispatch = useDispatch();
   const [cred, setCred] = useState<models.credential>(route.params.cred);
   const [verified, setVerified] = useState("help-circle");
-  const actionSheetRef = useRef(null);
+  // ref
+  const bottomSheetRef = useRef<BottomSheet>(null);
+
+  // variables
+  const snapPoints = useMemo(() => ["50%", "75%"], []);
+
+  // callbacks
+  const handleSheetChanges = useCallback((index: number) => {
+    console.log("handleSheetChanges", index);
+  }, []);
 
   useEffect(() => {
     console.log("cred details - initially setting cred", cred);
@@ -49,35 +64,41 @@ export default function CredentialDetailScreen({
   };
 
   return (
-    <ActionSheet ref={actionSheetRef}>
+    <BottomSheet
+      ref={bottomSheetRef}
+      index={1}
+      snapPoints={snapPoints}
+      onChange={handleSheetChanges}
+      backgroundStyle={{backgroundColor: '#140A0F', borderWidth: 1, borderColor: '#DE984F'}}
+    >
       <View
         style={{
           flex: 1,
           alignItems: "center",
           justifyContent: "center",
+          paddingHorizontal: 16
         }}
       >
-        <Pressable style={styles.pressable} onPress={navigation.goBack} />
         <View style={styles.closeButtonContainer}>
-          <IconButton
+        <IconButton
             icon="close-circle"
-            size={36}
-            color="#e69138"
+            size={28}
+            color="#C5C8D1"
             onPress={() => navigation.goBack()}
+            style={{borderWidth: 1, borderColor: '#FFA149', borderRadius: 10 }}
           />
-        </View>
-        <Animated.View style={styles.viewAnimated}>
-          <View style={{ flexDirection: "row" }}>
-            <IconButton
+          <IconButton
               icon={verified}
-              size={36}
-              color="#e69138"
+              size={28}
+              color="#C5C8D1"
               onPress={updateVerification}
+              style={{borderWidth: 1, borderColor: '#FFA149', borderRadius: 10 }}
             />
             <IconButton
               icon="qrcode"
-              size={36}
-              color="#e69138"
+              size={28}
+              color="#C5C8D1"
+              style={{borderWidth: 1, borderColor: '#FFA149', borderRadius: 10 }}
               onPress={() =>
                 goToShowQrCode(navigation, {
                   encodedSignedCredential: "dummy_vcEncodedSignedCredential",
@@ -88,10 +109,11 @@ export default function CredentialDetailScreen({
                 })
               }
             />
-          </View>
+        </View>
+        <Animated.View style={styles.viewAnimated}>
           <Image
             source={cred.alias === "DISCORD HANDLE" ? discordLogo : credLogo}
-            style={styles.credLogoStyle}
+            style={styles.credDetailLogoStyle}
           />
           <FlatList
             data={Object.entries(
@@ -112,6 +134,6 @@ export default function CredentialDetailScreen({
           />
         </Animated.View>
       </View>
-    </ActionSheet>
+    </BottomSheet>
   );
 }

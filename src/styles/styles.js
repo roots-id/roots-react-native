@@ -60,6 +60,11 @@ export const styles = StyleSheet.create({
         justifyContent: "space-around",
         width: "100%",
     },
+    credDetailLogoStyle: {
+        width: 100,
+        height: 100,
+        resizeMode: 'contain',
+    },
     credLogoStyle: {
         width: 65,
         height: 75,
@@ -277,12 +282,11 @@ export const styles = StyleSheet.create({
         fontWeight: 'bold',
     },
     viewAnimated: {
-        padding: 16,
         maxWidth: '90%',
         maxHeight: '85%',
         borderRadius: 3,
-        backgroundColor: '#cfbfca',
-        alignItems: "center",
+        backgroundColor: '#140A0F',
+        alignItems: 'flex-start',
         justifyContent: 'space-around',
         alignContent: 'space-around',
     },
