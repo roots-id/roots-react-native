@@ -1,20 +1,23 @@
-import React from 'react';
-import { Image } from 'react-native';
+import React from "react";
+import { Image } from "react-native";
 import {
   InputToolbar,
   Actions,
   Composer,
   Send,
   InputToolbarProps,
-  IMessage
-} from 'react-native-gifted-chat';
+  IMessage,
+} from "react-native-gifted-chat";
+import { IconButton, Button } from "react-native-paper";
 
 export const renderInputToolbar = (props: InputToolbarProps<IMessage>) => (
   <InputToolbar
     {...props}
     containerStyle={{
-      backgroundColor: '#604050',
-      borderTopColor: '#dddddd',
+      backgroundColor: "#000000",
+      borderBottomColor: "#DE984F",
+      borderBottomWidth: 1,
+      borderTopColor: "#DE984F",
       borderTopWidth: 1,
       padding: 1,
     }}
@@ -57,12 +60,7 @@ export const renderComposer = (props) => (
   <Composer
     {...props}
     textInputStyle={{
-      color: '#222B45',
-      backgroundColor: '#EDF1F7',
-      borderWidth: 1,
-      borderRadius: 5,
-      borderColor: '#E4E9F2',
-      paddingTop: 8.5,
+      color: "#F7F7F7",
       paddingHorizontal: 12,
       marginLeft: 0,
     }}
@@ -76,16 +74,11 @@ export const renderSend = (props) => (
     containerStyle={{
       width: 44,
       height: 44,
-      alignItems: 'center',
-      justifyContent: 'center',
+      alignItems: "center",
+      justifyContent: "center",
       marginHorizontal: 4,
     }}
   >
-    <Image
-      style={{ width: 32, height: 32 }}
-      source={{
-        uri: 'https://placeimg.com/32/32/any',
-      }}
-    />
+    <IconButton icon="send" size={28} color="#e69138" />
   </Send>
 );

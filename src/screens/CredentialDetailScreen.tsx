@@ -69,46 +69,49 @@ export default function CredentialDetailScreen({
       index={1}
       snapPoints={snapPoints}
       onChange={handleSheetChanges}
-      backgroundStyle={{backgroundColor: '#140A0F', borderWidth: 1, borderColor: '#DE984F'}}
+      backgroundStyle={{
+        backgroundColor: "#140A0F",
+        borderWidth: 1,
+        borderColor: "#DE984F",
+      }}
     >
       <View
         style={{
           flex: 1,
           alignItems: "center",
-          justifyContent: "center",
-          paddingHorizontal: 16
+          paddingHorizontal: 16,
         }}
       >
         <View style={styles.closeButtonContainer}>
-        <IconButton
-            icon="close-circle"
+          <IconButton
+            icon="keyboard-backspace"
             size={28}
             color="#C5C8D1"
             onPress={() => navigation.goBack()}
-            style={{borderWidth: 1, borderColor: '#FFA149', borderRadius: 10 }}
+            style={{ borderWidth: 1, borderColor: "#FFA149", borderRadius: 10 }}
           />
           <IconButton
-              icon={verified}
-              size={28}
-              color="#C5C8D1"
-              onPress={updateVerification}
-              style={{borderWidth: 1, borderColor: '#FFA149', borderRadius: 10 }}
-            />
-            <IconButton
-              icon="qrcode"
-              size={28}
-              color="#C5C8D1"
-              style={{borderWidth: 1, borderColor: '#FFA149', borderRadius: 10 }}
-              onPress={() =>
-                goToShowQrCode(navigation, {
-                  encodedSignedCredential: "dummy_vcEncodedSignedCredential",
-                  proof: {
-                    hash: "dummy_proofHash",
-                    index: 0,
-                  },
-                })
-              }
-            />
+            icon={verified}
+            size={28}
+            color="#C5C8D1"
+            onPress={updateVerification}
+            style={{ borderWidth: 1, borderColor: "#FFA149", borderRadius: 10 }}
+          />
+          <IconButton
+            icon="qrcode"
+            size={28}
+            color="#C5C8D1"
+            style={{ borderWidth: 1, borderColor: "#FFA149", borderRadius: 10 }}
+            onPress={() =>
+              goToShowQrCode(navigation, {
+                encodedSignedCredential: "dummy_vcEncodedSignedCredential",
+                proof: {
+                  hash: "dummy_proofHash",
+                  index: 0,
+                },
+              })
+            }
+          />
         </View>
         <Animated.View style={styles.viewAnimated}>
           <Image
