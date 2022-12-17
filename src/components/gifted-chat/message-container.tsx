@@ -24,17 +24,19 @@ export const renderBubble = (props: BubbleProps<IMessage>) => (
     wrapperStyle={{
       left: {
         backgroundColor: '#231F20',
+        borderRadius: 4,
       },
       right: {
         backgroundColor: '#24121B',
+        borderRadius: 4,
       },
     }}
     textStyle={{
       left: {
-        color: '#fff',
+        color: '#F7F7F7',
       },
       right: {
-        color: '#fff',
+        color: '#F7F7F7',
       },
     }}
   />
