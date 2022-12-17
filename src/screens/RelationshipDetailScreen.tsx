@@ -68,7 +68,7 @@ export default function RelationshipDetailScreen({
       >
         <View style={styles.closeButtonContainer}>
           <IconButton
-            icon="close-circle"
+            icon="keyboard-backspace"
             size={28}
             color="#C5C8D1"
             onPress={() => navigation.goBack()}
