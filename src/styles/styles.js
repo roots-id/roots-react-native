@@ -237,12 +237,12 @@ export const styles = StyleSheet.create({
         maxWidth: 350,
         maxHeight: 250,
         borderRadius: 3,
-        backgroundColor: '#cfbfca',
+        backgroundColor: '#140A0F',
     },
     subText: {
         fontSize: 16,
         marginBottom: 10,
-        color: '#111111',
+        color: '#C5C8D1',
         fontWeight: 'normal',
         alignSelf: "flex-start",
         justifyContent: "flex-start"
