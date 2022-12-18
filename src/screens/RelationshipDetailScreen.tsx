@@ -110,19 +110,25 @@ export default function RelationshipDetailScreen({
           />
         </View>
         <Animated.View style={styles.viewAnimated}>
-          <Image
-            source={{ uri: rel.displayPictureUrl }}
-            style={{
-              // width: '30%',
-              // height: '30%',
-              resizeMode: "contain",
-              margin: 8,
-              justifyContent: "flex-start",
-              width: 65,
-              height: 75,
-            }}
-          />
-          <Text style={styles.subText}>{rel.displayName}</Text>
+          <View
+            style={{ display: "flex", flexDirection: "row", marginTop: 10 }}
+          >
+            <Image
+              source={{ uri: rel.displayPictureUrl }}
+              style={{
+                // width: '30%',
+                // height: '30%',
+                resizeMode: "contain",
+                marginHorizontal: 8,
+                justifyContent: "flex-start",
+                width: 65,
+                height: 75,
+              }}
+            />
+            <Text style={{ ...styles.subText, fontWeight: "700" }}>
+              {rel.displayName}
+            </Text>
+          </View>
           <Divider />
           <ScrollView style={styles.scrollableModal}>
             <Text style={styles.subText}>{rel?.did}</Text>
