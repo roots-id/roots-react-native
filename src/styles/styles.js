@@ -38,7 +38,7 @@ export const styles = StyleSheet.create({
     closeButtonContainer: {
         flexDirection: "row",
         width: "100%",
-        justifyContent: "flex-end"
+        justifyContent: "flex-end",
     },
     container: {
         backgroundColor: '#000000',
@@ -152,7 +152,7 @@ export const styles = StyleSheet.create({
     listItemCenteredBlack: {
         fontSize: 18,
         marginBottom: 10,
-        color: '#111111',
+        color: '#ffffff',
         fontWeight: 'normal',
         textAlignVertical: "center",
         textAlign: "center",
@@ -256,8 +256,8 @@ export const styles = StyleSheet.create({
     titleText: {
         fontSize: 24,
         marginBottom: 10,
-        color: '#eeeeee',
-        fontWeight: 'normal',
+        color: '#ffffff',
+        fontWeight: 'bold',
         textAlignVertical: "center",
         textAlign: "center",
     },
@@ -293,7 +293,7 @@ export const styles = StyleSheet.create({
     viewAnimatedStart: {
         padding: 16,
         borderRadius: 3,
-        backgroundColor: '#cfbfca',
+        backgroundColor: '#140A0F',
         alignItems: 'flex-start',
         justifyContent: 'center',
     },

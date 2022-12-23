@@ -6,13 +6,13 @@ import { styles as globalStyles } from '../../styles/styles';
 import { IPickerType } from './types';
 
 export function Picker({selectedValue, onValueChange, itemList}: IPickerType) {
-  const viewStyles = {  width: '80%' }
+  const viewStyles = {  width: '80%', marginLeft: 10 }
   const pickerStyles = {}
   let PickerComponent;
   if (Platform.OS !== 'ios') {
     pickerStyles['mode'] = 'dropdown'
     pickerStyles['dropdownIconColor'] = '#e69138'
-    viewStyles['backgroundColor'] = '#000000';
+    viewStyles['backgroundColor'] = '#24121B';
     PickerComponent = RNPicker
   } else {
     pickerStyles['itemStyle'] = { ...styles.iosPickerItem }
