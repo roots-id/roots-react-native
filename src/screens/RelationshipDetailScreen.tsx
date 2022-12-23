@@ -116,8 +116,6 @@ export default function RelationshipDetailScreen({
             <Image
               source={{ uri: rel.displayPictureUrl }}
               style={{
-                // width: '30%',
-                // height: '30%',
                 resizeMode: "contain",
                 marginHorizontal: 8,
                 justifyContent: "flex-start",
