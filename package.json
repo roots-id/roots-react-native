@@ -41,7 +41,8 @@
     "redux-persist": "^6.0.0",
     "redux-thunk": "^2.4.1",
     "typescript": "^4.6.3",
-    "react-native-reanimated": "~2.9.1"
+    "react-native-reanimated": "~2.9.1",
+    "expo-image-picker": "~13.3.1"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",

@@ -5,7 +5,8 @@ import React, {
   useMemo,
   useCallback,
 } from "react";
-import { Image, Text, ScrollView, View } from "react-native";
+import * as ExpoImagePicker from "expo-image-picker";
+import { Button, Image, Text, ScrollView, View } from "react-native";
 import { IconButton, ToggleButton } from "react-native-paper";
 import { styles } from "../styles/styles";
 import { CompositeScreenProps } from "@react-navigation/core/src/types";
@@ -84,7 +85,8 @@ export default function SettingsScreen({
     dispatch(changePinStatus(!pinProtected));
   };
 
-  const handleUsernameChange = () => {
+  const handleUsernameChange = (userName) => {
+    setUsername(userName)
     dispatch(
       updateProfileInfo({
         data: { displayName: username },
@@ -93,13 +95,30 @@ export default function SettingsScreen({
     );
   };
 
-  const handleAvatarChange = () => {
+  const handleAvatarChange = (image) => {
+    setAvatar(image);
     dispatch(
       updateProfileInfo({
-        data: { displayPictureUrl: avatar },
+        data: { displayPictureUrl: image },
         message: `Avatar picture has been updated`,
       })
     );
+  };
+
+  const pickImage = async () => {
+    // No permissions request is necessary for launching the image library
+    let result = await ExpoImagePicker.launchImageLibraryAsync({
+      mediaTypes: ExpoImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    console.log("result", result);
+
+    if (!result.cancelled) {
+      handleAvatarChange(result.uri);
+    }
   };
 
   return (
@@ -115,162 +134,59 @@ export default function SettingsScreen({
       }}
     >
       <ScrollView>
-      <View
-        style={{
-          alignItems: "center",
-          justifyContent: "center",
-          paddingHorizontal: 16,
-        }}
-      >
         <View
           style={{
-            flexDirection: "row",
-            justifyContent: "space-between",
-            width: "100%",
             alignItems: "center",
+            justifyContent: "center",
+            paddingHorizontal: 16,
           }}
         >
-          <Text style={[styles.titleText]}>Settings</Text>
-          <IconButton
-            icon="keyboard-backspace"
-            size={28}
-            color="#C5C8D1"
-            onPress={() => navigation.goBack()}
-            style={{ borderWidth: 1, borderColor: "#FFA149", borderRadius: 10 }}
-          />
-        </View>
-        <View style={styles.viewAnimatedStart}>
           <View
             style={{
-              flexDirection: "column",
-              marginBottom: 10,
-              width: 300,
+              flexDirection: "row",
+              justifyContent: "space-between",
+              width: "100%",
+              alignItems: "center",
             }}
           >
-            <View
+            <Text style={[styles.titleText]}>Settings</Text>
+            <IconButton
+              icon="keyboard-backspace"
+              size={28}
+              color="#C5C8D1"
+              onPress={() => navigation.goBack()}
               style={{
-                alignItems: "center",
-                justifyContent: "space-between",
-                flexDirection: "row",
-              }}
-            >
-              <Text style={styles.listItemCenteredBlack}>Username </Text>
-              <IconButton
-                icon="content-save"
-                size={18}
-                color="#e69138"
-                onPress={handleUsernameChange}
-              />
-            </View>
-            <FormInput
-              labelName=""
-              value={username}
-              secureTextEntry={false}
-              onChangeText={(userName: string) => setUsername(userName)}
-              style={{
-                backgroundColor: "#24121B",
-                width: "100%",
-                height: 50,
                 borderWidth: 1,
+                borderColor: "#FFA149",
                 borderRadius: 10,
-                borderColor: "#e69138",
               }}
-              theme={{ colors: { text: "#e69138" } }}
             />
           </View>
-          <View
-            style={{
-              flexDirection: "column",
-              marginBottom: 10,
-              width: 260,
-            }}
-          >
+          <View style={styles.viewAnimatedStart}>
             <View
               style={{
-                alignItems: "center",
-                justifyContent: "space-between",
-                flexDirection: "row",
+                flexDirection: "column",
+                marginBottom: 10,
+                width: 300,
               }}
             >
-              <Text style={styles.listItemCenteredBlack}>Avatar </Text>
-              <IconButton
-                icon="content-save"
-                size={18}
-                color="#e69138"
-                onPress={handleAvatarChange}
-              />
-            </View>
-            <View style={{ flexDirection: "row" }}>
+              <View
+                style={{
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  flexDirection: "row",
+                }}
+              >
+                <Text style={styles.listItemCenteredBlack}>Username </Text>
+              </View>
               <FormInput
                 labelName=""
-                value={avatar}
+                value={username}
                 secureTextEntry={false}
-                onChangeText={(avatarLink: string) => setAvatar(avatarLink)}
-                multiline={true}
-                keyboardType="numeric"
-                placeholder="paste avatar url here"
-                placeholderTextColor="#c1bfbc9e"
+                onChangeText={handleUsernameChange}
                 style={{
                   backgroundColor: "#24121B",
                   width: "100%",
-                  height: 80,
-                  borderWidth: 1,
-                  borderRadius: 10,
-                  borderColor: "#e69138",
-                }}
-                theme={{ colors: { text: "#e69138" } }}
-              />
-              <Image
-                source={{
-                  uri: avatar,
-                }}
-                style={{
-                  width: 65,
-                  height: 65,
-                  resizeMode: "contain",
-                  margin: 8,
-                }}
-              />
-            </View>
-          </View>
-
-          <View
-            style={{
-              flexDirection: "column",
-              marginBottom: 10,
-              width: 260,
-            }}
-          >
-            <View
-              style={{
-                alignItems: "center",
-                justifyContent: "space-between",
-                flexDirection: "row",
-              }}
-            >
-              <Text style={styles.listItemCenteredBlack}>Pin Protected: </Text>
-              <ToggleButton
-                icon={
-                  pinProtected ? "toggle-switch" : "toggle-switch-off-outline"
-                }
-                size={26}
-                color="#e69138"
-                value="toggle demo switch"
-                onPress={handlePinProtectedChange}
-              />
-            </View>
-            {pinProtected ? (
-              <FormInput
-                labelName="Pin"
-                value={pin}
-                secureTextEntry={false}
-                onChangeText={(userPin: string) => {
-                  dispatch(changePin(userPin));
-                }}
-                keyboardType="numeric"
-                style={{
-                  backgroundColor: "#24121B",
-                  width: 250,
                   height: 50,
                   borderWidth: 1,
                   borderRadius: 10,
@@ -278,82 +194,162 @@ export default function SettingsScreen({
                 }}
                 theme={{ colors: { text: "#e69138" } }}
               />
-            ) : null}
-          </View>
-          <View
-            style={{
-              alignItems: "center",
-              justifyContent: "space-between",
-              flexDirection: "row",
-              marginTop: 10,
-            }}
-          >
-            <Text style={styles.listItemCenteredBlack}>Server </Text>
-            <Picker
-              itemList={[
-                {
-                  label: ServerType.Local.label,
-                  value: ServerType.Local.hostValue,
-                },
-                {
-                  label: ServerType.Prism.label,
-                  value: ServerType.Prism.hostValue,
-                },
-              ]}
-              selectedValue={host}
-              onValueChange={(itemValue) => setHost(String(itemValue))}
-            />
-          </View>
-          <View
-            style={{
-              alignItems: "center",
-              justifyContent: "space-between",
-              flexDirection: "row",
-              marginTop: 10,
-            }}
-          >
-            <Text style={styles.listItemCenteredBlack}>Mediator </Text>
-            <Picker
-              itemList={[
-                {
-                  label: MediatorType.Roots.label,
-                  value: MediatorType.Roots.value,
-                },
-              ]}
-              selectedValue={MediatorType.Roots.value}
-              onValueChange={(itemValue) => console.log(itemValue)}
-            />
-          </View>
-          <View style={{ marginTop: 10, flexDirection: "row", justifyContent: 'space-between', alignItems: 'center' }}>
-            <Text style={styles.listItemCenteredBlack}>Demo Mode ON/OFF: </Text>
-            <ToggleButton
-              icon={demoMode ? "toggle-switch" : "toggle-switch-off-outline"}
-              size={26}
-              color="#e69138"
-              value="toggle demo switch"
-              onPress={handleDemoModeChange}
-            />
-          </View>
-          <Text />
-          <View style={{ flexDirection: "row" }}>
-            <FormButton
-              title="Save/Restore Wallet"
-              modeValue="contained"
-              labelStyle={styles.loginButtonLabel}
-              onPress={() => navigation.navigate(ROUTE_NAMES.SAVE)}
-            />
-          </View>
-          <Text />
-          <View style={{ flexDirection: "row" }}>
-            <FormButton
-              title="Developers Only"
-              modeValue="contained"
-              labelStyle={styles.loginButtonLabel}
-              onPress={() => navigation.navigate(ROUTE_NAMES.DEVELOPERS)}
-            />
+            </View>
+            <View
+              style={{
+                flexDirection: "column",
+                marginBottom: 10,
+                width: 260,
+              }}
+            >
+              <View
+                style={{
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  flexDirection: "row",
+                }}
+              >
+                <Text style={styles.listItemCenteredBlack}>Avatar </Text>
+                <FormButton
+                  title={avatar ? "Change image" : "Pick an image"}
+                  modeValue="contained"
+                  onPress={pickImage}
+                />
+              </View>
+              <View style={{ flexDirection: "row" }}>
+                {avatar && (
+                  <Image
+                    source={{
+                      uri: avatar,
+                    }}
+                    style={{
+                      width: 65,
+                      height: 65,
+                      resizeMode: "contain",
+                      margin: 8,
+                    }}
+                  />
+                )}
+              </View>
+            </View>
+            <View
+              style={{
+                flexDirection: "column",
+                marginBottom: 10,
+                width: 260,
+              }}
+            >
+              <View
+                style={{
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  flexDirection: "row",
+                  marginBottom: 6
+                }}
+              >
+                <FormButton
+                  title={pinProtected ? "Disable Pin":"Enable Pin"}
+                  modeValue="contained"
+                  onPress={handlePinProtectedChange}
+                />
+              </View>
+              {pinProtected ? (
+                <FormInput
+                  labelName="Pin"
+                  value={pin}
+                  secureTextEntry={false}
+                  onChangeText={(userPin: string) => {
+                    dispatch(changePin(userPin));
+                  }}
+                  keyboardType="numeric"
+                  style={{
+                    backgroundColor: "#24121B",
+                    width: 250,
+                    height: 50,
+                    borderWidth: 1,
+                    borderRadius: 10,
+                    borderColor: "#e69138",
+                  }}
+                  theme={{ colors: { text: "#e69138" } }}
+                />
+              ) : null}
+            </View>
+            <View
+              style={{
+                alignItems: "center",
+                justifyContent: "space-between",
+                flexDirection: "row",
+                marginTop: 10,
+              }}
+            >
+              <Text style={styles.listItemCenteredBlack}>Server </Text>
+              <Picker
+                itemList={[
+                  {
+                    label: ServerType.Local.label,
+                    value: ServerType.Local.hostValue,
+                  },
+                  {
+                    label: ServerType.Prism.label,
+                    value: ServerType.Prism.hostValue,
+                  },
+                ]}
+                selectedValue={host}
+                onValueChange={(itemValue) => setHost(String(itemValue))}
+              />
+            </View>
+            <View
+              style={{
+                alignItems: "center",
+                justifyContent: "space-between",
+                flexDirection: "row",
+                marginTop: 10,
+              }}
+            >
+              <Text style={styles.listItemCenteredBlack}>Mediator </Text>
+              <Picker
+                itemList={[
+                  {
+                    label: MediatorType.Roots.label,
+                    value: MediatorType.Roots.value,
+                  },
+                ]}
+                selectedValue={MediatorType.Roots.value}
+                onValueChange={(itemValue) => console.log(itemValue)}
+              />
+            </View>
+            <View
+              style={{
+                marginTop: 10,
+                flexDirection: "row",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              <FormButton
+                  title={demoMode ? "Disable Demo Mode" : "Enable Demo Mode"}
+                  modeValue="contained"
+                  onPress={handleDemoModeChange}
+                />
+            </View>
+            <Text />
+            <View style={{ flexDirection: "row" }}>
+              <FormButton
+                title="Save/Restore Wallet"
+                modeValue="contained"
+                onPress={() => navigation.navigate(ROUTE_NAMES.SAVE)}
+              />
+            </View>
+            <Text />
+            <View style={{ flexDirection: "row" }}>
+              <FormButton
+                title="Developers Only"
+                modeValue="contained"
+                onPress={() => navigation.navigate(ROUTE_NAMES.DEVELOPERS)}
+              />
+            </View>
           </View>
         </View>
-      </View>
       </ScrollView>
     </BottomSheet>
   );

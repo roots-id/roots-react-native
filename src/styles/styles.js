@@ -11,14 +11,14 @@ export const styles = StyleSheet.create({
     },
     button: {
         maxWidth: "80%",
-        borderRadius: 10,
+        borderRadius: 4,
         backgroundColor: '#e69138',
         alignSelf: 'center',
-        marginTop: 10,
+        marginTop: 4,
     },
     buttonText: {
         marginHorizontal: 10,
-        fontSize: 16,
+        fontSize: 12,
         fontWeight: "bold",
         flex: 1,
         alignSelf: 'center'
