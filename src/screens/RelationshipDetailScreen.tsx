@@ -15,9 +15,8 @@ import {
 } from "react-native";
 import { Divider, IconButton } from "react-native-paper";
 import { CompositeScreenProps } from "@react-navigation/core/src/types";
+import { BottomSheet } from '../components';
 import { styles } from "../styles/styles";
-import BottomSheet from "@gorhom/bottom-sheet";
-import * as models from "../models";
 import { goToShowQrCode } from "../navigation/helper/navigate-to";
 // import { showQR } from '../qrcode';
 // import { addDidDoc, asContactShareable } from '../relationships';
@@ -32,33 +31,13 @@ export default function RelationshipDetailScreen({
     JSON.stringify(route.params)
   );
   const [rel, setRel] = useState<any>(route.params.user);
-  // ref
-  const bottomSheetRef = useRef<BottomSheet>(null);
-
-  // variables
-  const snapPoints = useMemo(() => ["50%", "75%"], []);
-
-  // callbacks
-  const handleSheetChanges = useCallback((index: number) => {
-    console.log("handleSheetChanges", index);
-  }, []);
 
   useEffect(() => {
     console.log("RelDetailScreen - rel changed", rel);
   }, [rel]);
 
   return (
-    <BottomSheet
-      ref={bottomSheetRef}
-      index={1}
-      snapPoints={snapPoints}
-      onChange={handleSheetChanges}
-      backgroundStyle={{
-        backgroundColor: "#140A0F",
-        borderWidth: 1,
-        borderColor: "#DE984F",
-      }}
-    >
+    <BottomSheet>
       <View
         style={{
           flex: 1,

@@ -17,8 +17,8 @@ import { ConfigService, ServerService } from "../services";
 import { MediatorType, ServerType } from "../models/constants";
 import { ROUTE_NAMES } from "../navigation";
 import FormInput from "../components/FormInput";
+import { BottomSheet } from '../components';
 import { useDispatch, useSelector } from "react-redux";
-import BottomSheet from "@gorhom/bottom-sheet";
 import {
   getProfile,
   getIsPinProtected,
@@ -38,16 +38,6 @@ export default function SettingsScreen({
   const [host, setHost] = useState<string>();
   const [username, setUsername] = useState("");
   const [avatar, setAvatar] = useState("");
-  // ref
-  const bottomSheetRef = useRef<BottomSheet>(null);
-  // variables
-  const snapPoints = useMemo(() => ["75%", "90%"], []);
-
-  // callbacks
-  const handleSheetChanges = useCallback((index: number) => {
-    console.log("handleSheetChanges", index);
-  }, []);
-
   const profile = useSelector(getProfile);
   const pinProtected = useSelector(getIsPinProtected);
   const pin = useSelector(getWalletPin);
@@ -122,17 +112,7 @@ export default function SettingsScreen({
   };
 
   return (
-    <BottomSheet
-      ref={bottomSheetRef}
-      index={1}
-      snapPoints={snapPoints}
-      onChange={handleSheetChanges}
-      backgroundStyle={{
-        backgroundColor: "#140A0F",
-        borderWidth: 1,
-        borderColor: "#DE984F",
-      }}
-    >
+    <BottomSheet snapPoints={["75%", "90%"]} >
       <ScrollView>
         <View
           style={{
