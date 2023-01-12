@@ -15,9 +15,9 @@ import {
   ScrollView,
 } from "react-native";
 import { Divider, IconButton } from "react-native-paper";
-import BottomSheet from "@gorhom/bottom-sheet";
 import * as models from "../models";
 import { styles } from "../styles/styles";
+import { BottomSheet } from "../components";
 import { CompositeScreenProps } from "@react-navigation/core/src/types";
 import { decodeCredential } from "../models/samples/credentials";
 import { goToShowQrCode } from "../navigation/helper/navigate-to";
@@ -34,16 +34,6 @@ export default function CredentialDetailScreen({
   const dispatch = useDispatch();
   const [cred, setCred] = useState<models.credential>(route.params.cred);
   const [verified, setVerified] = useState("help-circle");
-  // ref
-  const bottomSheetRef = useRef<BottomSheet>(null);
-
-  // variables
-  const snapPoints = useMemo(() => ["50%", "75%"], []);
-
-  // callbacks
-  const handleSheetChanges = useCallback((index: number) => {
-    console.log("handleSheetChanges", index);
-  }, []);
 
   useEffect(() => {
     console.log("cred details - initially setting cred", cred);
@@ -64,17 +54,7 @@ export default function CredentialDetailScreen({
   };
 
   return (
-    <BottomSheet
-      ref={bottomSheetRef}
-      index={1}
-      snapPoints={snapPoints}
-      onChange={handleSheetChanges}
-      backgroundStyle={{
-        backgroundColor: "#140A0F",
-        borderWidth: 1,
-        borderColor: "#DE984F",
-      }}
-    >
+    <BottomSheet>
       <View
         style={{
           flex: 1,
