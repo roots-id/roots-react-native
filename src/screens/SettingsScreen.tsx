@@ -98,7 +98,7 @@ export default function SettingsScreen({
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
     let result = await ExpoImagePicker.launchImageLibraryAsync({
-      mediaTypes: ExpoImagePicker.MediaTypeOptions.All,
+      mediaTypes: ExpoImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
       aspect: [4, 3],
       quality: 1,
