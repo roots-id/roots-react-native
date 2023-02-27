@@ -15,7 +15,7 @@ import {
 } from "react-native";
 import { Divider, IconButton } from "react-native-paper";
 import { CompositeScreenProps } from "@react-navigation/core/src/types";
-import { BottomSheet } from '../components';
+import { BottomSheet } from '../components/bottom-sheet';
 import { styles } from "../styles/styles";
 import { goToShowQrCode } from "../navigation/helper/navigate-to";
 // import { showQR } from '../qrcode';

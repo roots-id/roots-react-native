@@ -115,6 +115,13 @@ export type exportKeyValue = {
     value: Object,
 }
 
+export type identifier = {
+    _id: string,
+    alias?: string,
+    published?: false,
+    resolution?: object,
+}
+
 export interface issuedCredential extends credential {
     batchId: string,
     claim: claim,
@@ -222,10 +229,10 @@ export function createChat(chatAlias: string, fromDidAlias: string,
 export function createMessage(idText: string, bodyText: string, statusText: string,
                               timeInMillis: number, relId: string, system = false, data: any): message {
     const msg = {
-        body: bodyText,
-        createdTime: timeInMillis,
+        text: bodyText,
+        createdAt: timeInMillis,
         data: data,
-        id: idText,
+        _id: idText,
         rel: relId,
         system: system,
         type: statusText,

@@ -8,45 +8,7 @@ const CREATE_ADD_CREDENTIAL = `${BASE_CREDENTIAL}createAndAdd`;
 const ADD_CREDENTIAL_TO_LIST = `${BASE_CREDENTIAL}addToList`;
 const UPDATE_CREDENTIAL_VALIDATION = `${BASE_CREDENTIAL}credential_validation`;
 
-export const createCredential = createAsyncThunk(
-  CREATE_CREDENTIAL,
-  async (credential: any, thunkAPI: any) => {
-    const today = new Date(Date.now());
 
-    const decodedSignedCred = {
-      id: credential.issuerId,
-      keyId: 'issuing0',
-      credentialSubject: credential.credSub,
-    };
-    const proof = {
-      hash: today.getMilliseconds().toString(),
-      index: 1,
-    };
-    const encoded = encodeCredential(decodedSignedCred);
-
-    const newCredential = {
-      _id: `${credential.issuerId}:cred_${Date.now()}`,
-      alias: credential.alias,
-      verifiedCredential: {
-        encodedSignedCredential: encoded,
-        proof,
-      },
-      issuerId: credential.issuerId,
-      revoked: credential.revoked,
-    };
-    return newCredential;
-  }
-);
-
-export const createAndAddCredential = createAsyncThunk(
-  CREATE_ADD_CREDENTIAL,
-  async (credential: any, thunkAPI: any) => {
-    const cred = (await thunkAPI.dispatch(createCredential(credential)))
-      .payload;
-    thunkAPI.dispatch(addCredential(cred));
-    return cred;
-  }
-);
 
 export const addCredentialToList = createAsyncThunk(
   ADD_CREDENTIAL_TO_LIST,
@@ -56,20 +18,51 @@ export const addCredentialToList = createAsyncThunk(
   }
 );
 
+const ACCEPT_CREDENTIAL_OFFER = `${BASE_CREDENTIAL}createCredentialThunk`;
+export const acceptCredentialOffer = createAsyncThunk(
+  ACCEPT_CREDENTIAL_OFFER,
+  async (credential: any, thunkAPI: any) => {
+    const state = thunkAPI.getState();
+    const findCredentialIndex = state.credential.credentials.findIndex(cred => cred._id === credential._id);
+    //need to call agent to accept the offer
+    console.log('found credential index', state.credential.credentials)
+    if( findCredentialIndex > -1) {
+      thunkAPI.dispatch(
+        updateCredential({ index: findCredentialIndex, credential: credential})
+      );
+    }
+    return true;
+  }
+);
+
+const DENY_CREDENTIAL_OFFER = `${BASE_CREDENTIAL}denyCredentialOffer`;
+export const denyCredentialOffer = createAsyncThunk(
+  DENY_CREDENTIAL_OFFER,
+  async (credential: any, thunkAPI: any) => {
+    const state = thunkAPI.getState();
+    const findCredentialIndex = state.credential.credentials.findIndex(cred => cred._id === credential._id);
+    if( findCredentialIndex > -1) {
+      thunkAPI.dispatch(
+        updateCredential({ index: findCredentialIndex, credential: credential})
+      );
+    }
+    return false;
+  }
+);
+
+
+
+
 export const updateCredentialValidation = createAsyncThunk(
   UPDATE_CREDENTIAL_VALIDATION,
   async (credential: any, thunkAPI: any) => {
     const state = thunkAPI.getState();
     const findCredentialIndex = state.credential.credentials.findIndex(cred => cred._id === credential._id);
-    const isRevoked = !!(findCredentialIndex % 2);
     if( findCredentialIndex > -1) {
       thunkAPI.dispatch(
-        updateCredential({ index: findCredentialIndex, credential: {
-          ...credential,
-          revoked: isRevoked,
-        }})
+        updateCredential({ index: findCredentialIndex, credential: credential})
       );
     }
-    return isRevoked;
+    return true;
   }
 );

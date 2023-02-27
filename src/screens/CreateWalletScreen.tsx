@@ -55,7 +55,7 @@ export default function CreateWalletScreen({
 
   function checkErrors() {
     const passNumeric = /\d/.test(password);
-    console.warn(
+    console.info(
       'CreateWalletScreen - password must contain numbers',
       passNumeric
     );
@@ -66,7 +66,7 @@ export default function CreateWalletScreen({
     );
 
     const prob = problemText && problemText.length > 0;
-    console.warn('CreateWalletScreen - problem detected', problemText);
+    console.info('CreateWalletScreen - problem detected', problemText);
     setProblem(
       <Text style={displayOrHide(prob, styles.problem)}>{problemText}</Text>
     );

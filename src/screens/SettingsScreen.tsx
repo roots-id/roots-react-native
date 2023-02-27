@@ -5,7 +5,7 @@ import React, {
   useMemo,
   useCallback,
 } from "react";
-import * as ExpoImagePicker from "expo-image-picker";
+import * as ExpoImagePicker from "react-native-image-picker";
 import { Button, Image, Text, ScrollView, View } from "react-native";
 import { IconButton, ToggleButton } from "react-native-paper";
 import { styles } from "../styles/styles";
@@ -17,7 +17,7 @@ import { ConfigService, ServerService } from "../services";
 import { MediatorType, ServerType } from "../models/constants";
 import { ROUTE_NAMES } from "../navigation";
 import FormInput from "../components/FormInput";
-import { BottomSheet } from '../components';
+import { BottomSheet } from '../components/bottom-sheet';
 import { useDispatch, useSelector } from "react-redux";
 import {
   getProfile,
@@ -97,17 +97,16 @@ export default function SettingsScreen({
 
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
-    let result = await ExpoImagePicker.launchImageLibraryAsync({
-      mediaTypes: ExpoImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
+    let result = await ExpoImagePicker.launchImageLibrary({
+      mediaType: "photo",
+      quality: 1
     });
 
     console.log("result", result);
 
-    if (!result.cancelled) {
-      handleAvatarChange(result.uri);
+    if (!result.didCancel) {
+      let image = result.assets[0]
+      handleAvatarChange(image.uri);
     }
   };
 

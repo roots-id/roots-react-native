@@ -7,5 +7,8 @@ export const getVerifiedCredentials = createSelector(credentialSelector, (state)
 });
 
 export const getVerifiedCredentialById = createSelector(credentialSelector, (state) => (id) => {
-  return state.credentials.find((cred) => cred._id === id);
+  
+  const index = state.credentials.findIndex((cred) => cred._id === id);
+  const credential = index !== -1 ? state.credentials[index] : undefined;
+  return { credential, index };
 });

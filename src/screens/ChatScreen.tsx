@@ -1,5 +1,5 @@
-import React, { useEffect, useState, useCallback } from "react";
-import { Linking, Text, View } from "react-native";
+import React, { useEffect, useState, useCallback } from 'react';
+import { Linking, Text, View } from 'react-native';
 import {
   Bubble,
   GiftedChat,
@@ -8,112 +8,59 @@ import {
   InputToolbarProps,
   Reply,
   User,
-} from "react-native-gifted-chat";
+} from 'react-native-gifted-chat';
 
 import {
   renderInputToolbar,
-  renderBubble,
-  renderComposer,
-  renderSend,
+      renderBubble,
+      renderComposer,
+      renderSend,
 } from "../components/gifted-chat";
-// import * as contacts from '../relationships';
-import * as models from "../models";
-// import { showQR } from '../qrcode';
-// import {
-//   asContactShareable,
-//   getContactByAlias,
-//   getContactByDid,
-//   showRel,
-// } from '../relationships';
-// import * as roots from '../roots';
-import Loading from "../components/Loading";
-import { styles } from "../styles/styles";
-import { CompositeScreenProps } from "@react-navigation/core/src/types";
-import { BubbleProps } from "react-native-gifted-chat/lib/Bubble";
-import { MessageType } from "../models/constants";
-import { ROUTE_NAMES } from "../navigation";
-import { useDispatch, useSelector } from "react-redux";
-import { getChatById } from "../store/selectors/chat";
-import {
-  addCredentialAndNotify,
-  denyCredentialAndNotify,
-} from "../store/thunks/wallet";
+import * as models from '../models';;
+import { styles } from '../styles/styles';
+import { CompositeScreenProps } from '@react-navigation/core/src/types';
+import { BubbleProps } from 'react-native-gifted-chat/lib/Bubble';
+import { MessageType } from '../models/constants';
+import { ROUTE_NAMES } from '../navigation';
+import { useDispatch, useSelector } from 'react-redux';
+import { getChatById } from '../store/selectors/chat';
+
 import {
   getContactById,
   getCurrentUserContact,
-} from "../store/selectors/contact";
-import { sendMessageToChat } from "../store/thunks/chat";
+} from '../store/selectors/contact';
+import { sendMessageToChat } from '../store/thunks/chat';
 import { updateMessageQuickReplyStatus } from "../store/slices/chat";
+import { addCredential } from '../store/slices/credential';
 
 export default function ChatScreen({
   route,
   navigation,
 }: CompositeScreenProps<any, any>) {
-  console.log("ChatScreen - route params", route.params);
+  console.log('ChatScreen - route params', route.params);
   const user = route.params.user;
-  const [chat, setChat] = useState<models.chat>();
   // roots.getChatItem(route.params.chatId)
   const [contact, setContact] = useState<models.contact>();
-  console.log("ChatScreen - got chatItem ", chat);
   const [loading, setLoading] = useState<boolean>(true);
   const [processing, setProcessing] = useState<boolean>(false);
   const currentChat = useSelector((state) => getChatById(state, user._id));
   const currentUser = useSelector(getCurrentUserContact);
   const getUserById = useSelector(getContactById);
   const dispatch = useDispatch();
-  // useEffect(() => {
-  //   setMessages(messages);
-  // }, []);
-  //   useEffect(() => {
-  //     console.log('ChatScreen - chat set', chat);
-  //     const chatSession = roots.startChatSession(chat.id, {
-  //       chat: chat,
-  //       onReceivedMessage: (message) => {
-  //         if (message && GiftedChat) {
-  //           setMessages((currentMessages) => {
-  //             const iMsg = mapMessage(message);
-  //             if (iMsg) {
-  //               return GiftedChat.append(currentMessages, [iMsg]);
-  //             }
-  //           });
-  //         }
-  //       },
-  //       onProcessing: (processing) => {
-  //         setProcessing(processing);
-  //         console.log('ChatScreen - updated processing indicator', processing);
-  //       },
-  //     });
-  //     if (chatSession.succeeded) {
-  //       console.log('ChatScreen - chat session started successfully');
-  //     } else {
-  //       console.error('ChatScreen - chat session failed', chatSession.error);
-  //     }
 
-  //     setContact(getContactByAlias(chat.id));
-  //     console.log('ChatScreen - getting all messages');
-  //     const msgs = roots.getMessagesByChat(chat.id);
-  //     console.log('ChatScreen - got', msgs.length, 'msgs');
-  //     const mapMsgs = msgs.map((msg) => {
-  //       return mapMessage(msg);
-  //     });
-  //     setMessages(mapMsgs);
-  //     setLoading(false);
-  //     return () => {
-  //       chatSession.end;
-  //     };
-  //   }, [chat]);
+  //create use effect for two async calls
+  useEffect(() => {
+    console.log('Current route', route);
+    console.log('Current state');
 
-  //   useEffect(() => {}, [messages]);
-
-  //   async function handleSend(pendingMsgs: IMessage[]) {
-  //     console.log('ChatScreen - handle send', pendingMsgs);
-  //     const result = await roots.sendMessages(
-  //       chat,
-  //       pendingMsgs.map((msg) => msg.text),
-  //       roots.MessageType.TEXT,
-  //       contacts.getUserId()
-  //     );
-  //   }
+    const getContact = async () => {
+      const contact = await getUserById(user._id);
+      console.log('contact', contact);
+      setContact(contact);
+      setLoading(false);
+    };
+    getContact();
+  }, [user._id]);
 
   const openRelationshipDetailScreen = (user) => {
     navigation.navigate(ROUTE_NAMES.RELATIONSHIP_DETAILS, {
@@ -122,99 +69,38 @@ export default function ChatScreen({
   };
 
   function handleQuickReply(replies: Reply[]) {
-    console.log("replies", replies);
+    console.log('replies', replies);
     if (replies) {
       for (const reply of replies) {
-        if (reply.value.startsWith(MessageType.PROMPT_OWN_DID)) {
-          console.log("ChatScreen - quick reply view did");
-          openRelationshipDetailScreen(currentUser);
-        } else if (
-          reply.value.startsWith(MessageType.PROMPT_ISSUED_CREDENTIAL)
-        ) {
-          if (reply.value.endsWith(MessageType.CRED_REVOKE)) {
-            console.log(
-              "ChatScreen - process quick reply for revoking credential"
-            );
-            console.log("ChatScreen - credential revoked?");
-          } else if (reply.value.endsWith(MessageType.CRED_VIEW)) {
-            console.log("ChatScreen - quick reply view issued credential");
+        if (reply.value.endsWith(MessageType.CRED_VIEW)) {
+            console.log('ChatScreen - quick reply view issued credential');
             const msgCurrentChat = currentChat?.messages.find(
               (message) => message._id === reply.messageId
             );
             navigation.navigate(ROUTE_NAMES.CREDENTIAL_DETAILS, {
               cred: msgCurrentChat?.data?.credential,
+              msg: msgCurrentChat
             });
-          }
-        } else if (reply.value.startsWith(MessageType.PROMPT_OWN_CREDENTIAL)) {
-          console.log("ChatScreen - process quick reply for owned credential");
-          if (reply.value.endsWith(MessageType.CRED_VIEW)) {
-            console.log("ChatScreen - quick reply view imported credential");
+        } 
+        else if (reply.value.startsWith(MessageType.ISSUED_CREDENTIAL)) {
+            console.log('ChatScreen - quick reply view credential');
             const msgCurrentChat = currentChat?.messages.find(
               (message) => message._id === reply.messageId
             );
             navigation.navigate(ROUTE_NAMES.CREDENTIAL_DETAILS, {
               cred: msgCurrentChat?.data?.credential,
+              msg: msgCurrentChat
             });
-          }
-        } else if (
-          reply.value.startsWith(
-            MessageType.PROMPT_PREVIEW_ACCEPT_DENY_CREDENTIAL
-          )
-        ) {
-          console.log("ChatScreen - process quick reply for owned credential");
-          const msgCurrentChat = currentChat?.messages.find(
-            (message) => message._id === reply.messageId
-          );
-          if (reply.value.endsWith(MessageType.CRED_PREVIEW)) {
-            console.log("ChatScreen - quick reply preview credential");
-            navigation.navigate(ROUTE_NAMES.CREDENTIAL_DETAILS, {
-              cred: msgCurrentChat?.data?.credential,
-            });
-          } else if (reply.value.endsWith(MessageType.CRED_ACCEPT)) {
-            console.log("ChatScreen - quick reply accept imported credential");
-            dispatch(
-              updateMessageQuickReplyStatus({
-                chatId: currentChat?._id,
-                messageId: msgCurrentChat?._id,
-                keepIt: false,
-              })
-            );
-            dispatch(addCredentialAndNotify(msgCurrentChat?.data?.credential));
-          } else if (reply.value.endsWith(MessageType.CRED_DENY)) {
-            console.log("ChatScreen - quick reply deny imported credential");
-            dispatch(denyCredentialAndNotify(msgCurrentChat?.data?.credential));
-            dispatch(
-              updateMessageQuickReplyStatus({
-                chatId: currentChat?._id,
-                messageId: msgCurrentChat?._id,
-                keepIt: false,
-              })
-            );
-          }
-        } else if (
-          reply.value.startsWith(MessageType.PROMPT_ACCEPTED_CREDENTIAL)
-        ) {
+        } 
+        else {
           console.log(
-            "ChatScreen - process quick reply for accepted credential"
-          );
-          if (reply.value.endsWith(MessageType.CRED_VIEW)) {
-            console.log("ChatScreen - quick reply preview credential");
-            const msgCurrentChat = currentChat?.messages.find(
-              (message) => message._id === reply.messageId
-            );
-            navigation.navigate(ROUTE_NAMES.CREDENTIAL_DETAILS, {
-              cred: msgCurrentChat?.data?.credential,
-            });
-          }
-        } else {
-          console.log(
-            "ChatScreen - reply value not recognized, was",
+            'ChatScreen - reply value not recognized, was',
             reply.value
           );
         }
       }
     } else {
-      console.log("ChatScreen - reply", replies, "were undefined");
+      console.log('ChatScreen - reply', replies, 'were undefined');
     }
   }
 
@@ -252,7 +138,7 @@ export default function ChatScreen({
           senderId: currentUser?._id,
           chatId: currentChat?._id,
           message: message.text,
-          type: MessageType.TEXT,
+          type: MessageType.TEXT
         })
       );
     });
@@ -262,7 +148,7 @@ export default function ChatScreen({
   }, []);
 
   return (
-    <View style={{ backgroundColor: "#000000", flex: 1, display: "flex" }}>
+    <View style={{ backgroundColor: '#000000', flex: 1, display: 'flex' }}>
       <GiftedChat
         isTyping={processing}
         inverted={false}
@@ -270,18 +156,18 @@ export default function ChatScreen({
         messages={currentChat?.messages?.sort((a, b) => {
           return a.createdAt < b.createdAt ? -1 : 1;
         })}
-        placeholder={"Tap to type..."}
+        placeholder={'Tap to type...'}
         onSend={onSend}
         user={{
           _id: currentUser._id,
           name: currentUser.displayName,
           avatar: currentUser.displayPictureUrl,
         }}
-        showUserAvatar={true}
-        renderUsernameOnMessage={true}
+        showUserAvatar={ false }
+        renderUsernameOnMessage={ true }
         parsePatterns={(linkStyle) => [
           {
-            type: "url",
+            type: 'url',
             style: styles.clickableListTitle,
             onPress: (tag: string) => Linking.openURL(tag),
           },
@@ -291,13 +177,10 @@ export default function ChatScreen({
           },
         ]}
         renderAvatarOnTop={true}
-        renderInputToolbar={renderInputToolbar}
         renderComposer={renderComposer}
+        renderInputToolbar={renderInputToolbar}
         renderBubble={renderBubble}
         renderSend={renderSend}
-        // renderQuickReplySend={() => (
-        //   <Text style={{ color: "#e69138", fontSize: 18 }}>Confirm</Text>
-        // )}
         quickReplyStyle={{
           backgroundColor: "#140A0F",
           borderRadius: 4,
@@ -316,56 +199,4 @@ export default function ChatScreen({
     </View>
   );
 
-  //   function mapMessage(message: models.message): IMessage {
-  //     console.log('ChatScreen - Map message for gifted', message);
-  //     const image = message.image;
-  //     const user = getContactByAlias(message.rel);
-  //     const mappedMsg: IMessage = {
-  //       _id: message.id,
-  //       createdAt: message.createdTime,
-  //       system: message.system,
-  //       text: message.body,
-  //       user: mapUser(user),
-  //     };
-  //     if (message.image) {
-  //       mappedMsg.image = message.image;
-  //     }
-  //     if (message.quickReplies) {
-  //       mappedMsg.quickReplies = message.quickReplies;
-  //     }
-  //     console.log('ChatScreen - got mapped message', mappedMsg);
-  //     return mappedMsg;
-  //     //image: 'https://www.google.com/images/branding/googlelogo/1x/googlelogo_light_color_272x92dp.png',
-  //     // You can also add a video prop:
-  //     //video: 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4',
-  //     // Mark the message as sent, using one tick
-  //     //sent: true,
-  //     // Mark the message as received, using two tick
-  //     //received: true,
-  //     // Mark the message as pending with a clock loader
-  //     //pending: true,
-  //     // Any additional custom parameters are passed through
-  //   }
-
-  //   function mapUser(rel: models.contact | undefined): User {
-  //     console.log('ChatScreen - Map User for gifted', rel);
-  //     let user: User;
-  //     if (rel) {
-  //       user = {
-  //         _id: rel.id,
-  //         name: rel.displayName,
-  //         avatar: rel.displayPictureUrl,
-  //       };
-  //     } else {
-  //       console.error('Unable to map user', rel);
-  //       user = {
-  //         _id: '',
-  //         name: '',
-  //         avatar: '',
-  //       };
-  //     }
-
-  //     console.log('ChatScreen - mapped user is', user);
-  //     return user;
-  //   }
 }

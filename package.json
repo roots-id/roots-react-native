@@ -1,16 +1,16 @@
 {
-  "name": "roots-react-native2",
-  "version": "1.0.0",
-  "main": "node_modules/expo/AppEntry.js",
+  "name": "MyApp",
+  "version": "0.0.1",
+  "private": true,
   "scripts": {
-    "start-clean": "expo start -c",
-    "start": "expo start",
-    "android": "expo start --android",
-    "ios": "expo start --ios",
-    "web": "expo start --web"
+    "android": "react-native run-android",
+    "ios": "react-native run-ios",
+    "start": "react-native start",
+    "test": "jest",
+    "lint": "eslint .",
+    "pod-install": "RCT_NEW_ARCH_ENABLED=0 bundle exec pod install"
   },
   "dependencies": {
-    "@expo/webpack-config": "^0.17.0",
     "@gorhom/bottom-sheet": "^4.4.5",
     "@react-native-async-storage/async-storage": "~1.17.3",
     "@react-native-picker/picker": "^2.4.8",
@@ -19,35 +19,51 @@
     "@react-navigation/native": "^6.0.13",
     "@react-navigation/stack": "^6.3.1",
     "@reduxjs/toolkit": "^1.8.6",
-    "@types/react": "~18.0.0",
-    "@types/react-native": "~0.69.1",
-    "expo": "~46.0.9",
-    "expo-barcode-scanner": "^11.4.0",
-    "expo-camera": "~12.3.0",
-    "expo-status-bar": "~1.4.0",
-    "metro-react-native-babel-preset": "^0.73.2",
+    "metro-react-native-babel-preset": "^0.73.4",
     "react": "18.0.0",
     "react-dom": "18.0.0",
-    "react-native": "0.69.5",
-    "react-native-gesture-handler": "~2.5.0",
+    "react-native": "^0.70.6",
+    "react-native-gesture-handler": "^2.8.0",
     "react-native-gifted-chat": "^1.0.4",
-    "react-native-paper": "^4.12.4",
+    "react-native-image-picker": "^5.0.1",
+    "react-native-paper": "^5.0.1",
+    "react-native-permissions": "^3.6.1",
     "react-native-qrcode-svg": "^6.1.2",
+    "react-native-reanimated": "^2.13.0",
     "react-native-safe-area-context": "^4.2.4",
-    "react-native-svg": "12.3.0",
+    "react-native-screens": "^3.18.2",
+    "react-native-svg": "^13.6.0",
     "react-native-uuid": "^2.0.1",
-    "react-native-web": "^0.18.9",
+    "react-native-vector-icons": "^9.2.0",
+    "react-native-vision-camera": "^2.15.2",
     "react-redux": "^8.0.4",
     "redux-persist": "^6.0.0",
     "redux-thunk": "^2.4.1",
     "typescript": "^4.6.3",
-    "react-native-reanimated": "~2.9.1",
-    "expo-image-picker": "~13.3.1"
+    "vision-camera-code-scanner": "^0.2.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.12.9",
+    "@babel/core": "^7.20.5",
+    "@babel/runtime": "^7.20.6",
     "@faker-js/faker": "^7.6.0",
-    "react-native-svg-transformer": "^1.0.0"
+    "@react-native-community/eslint-config": "^3.2.0",
+    "@types/jest": "^29.2.4",
+    "@types/react": "^18.0.26",
+    "@types/react-dom": "^18.0.9",
+    "@types/react-native": "^0.70.6",
+    "babel-jest": "^29.3.1",
+    "eslint": "^8.28.0",
+    "jest": "^29.3.1"
   },
-  "private": true
+  "jest": {
+    "preset": "react-native"
+  },
+  "peerDependencies": {
+    "lodash": "*",
+    "lodash.isstring": "*",
+    "react": "*",
+    "react-native": "*",
+    "react-native-paper": "*",
+    "react-native-vector-icons": "*"
+  }
 }

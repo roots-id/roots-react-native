@@ -7,7 +7,6 @@ import { sendMessage } from '../../helpers/messages';
 const BASE_CHAT = 'chat/';
 const SEND_MESSAGE = `${BASE_CHAT}sendMessage`;
 
-
 interface SendMessageDto {
   chatId: string;
   senderId: string;

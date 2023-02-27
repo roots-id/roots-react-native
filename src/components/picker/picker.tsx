@@ -18,7 +18,7 @@ export function Picker({selectedValue, onValueChange, itemList}: IPickerType) {
     pickerStyles['itemStyle'] = { ...styles.iosPickerItem }
     PickerComponent = PickerIOS;
   }
-  
+
   return (
     <View style={{ ...viewStyles }}>
       <PickerComponent
