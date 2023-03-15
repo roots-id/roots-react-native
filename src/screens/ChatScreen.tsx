@@ -74,11 +74,12 @@ export default function ChatScreen({
       for (const reply of replies) {
         if (reply.value.endsWith(MessageType.CRED_VIEW)) {
             console.log('ChatScreen - quick reply view issued credential');
+            console.log("currentChat", currentChat)
             const msgCurrentChat = currentChat?.messages.find(
               (message) => message._id === reply.messageId
             );
             navigation.navigate(ROUTE_NAMES.CREDENTIAL_DETAILS, {
-              cred: msgCurrentChat?.data?.credential,
+              // cred: msgCurrentChat?.data?.credential,
               msg: msgCurrentChat
             });
         } 

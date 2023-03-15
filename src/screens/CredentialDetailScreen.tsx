@@ -19,7 +19,7 @@ import { decodeCredential } from "../models/samples/credentials";
 import { goToShowQrCode } from "../navigation/helper/navigate-to";
 import { useDispatch } from "react-redux";
 import {updateMessage } from "../store/slices/chat";
-import { denyCredentialOffer, acceptCredentialOffer } from "../store/thunks/credential";
+import { denyCredentialOffer, addCredentialToList } from "../store/thunks/credential";
 
 
 const credLogo = require("../assets/vc.png");
@@ -51,7 +51,7 @@ export default function CredentialDetailScreen({
   const handleAccept =  async () => {
     //set is_offer if cred to false using spread operator
     const updatedCred = { ...cred, is_offer: 'Accepted' };
-    dispatch(acceptCredentialOffer(updatedCred));
+    dispatch(addCredentialToList(updatedCred));
     setCred(updatedCred);
     console.log('updated cred', updatedCred)
   

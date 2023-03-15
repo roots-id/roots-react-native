@@ -36,7 +36,7 @@ const CredentialsScreen = ({
         <FlatList
           data={creds}
           extraData={refresh}
-          keyExtractor={(item) => item.verifiedCredential.proof.hash}
+          keyExtractor={(item) => item.credentialSubject.id}
           ItemSeparatorComponent={() => <Divider />}
           renderItem={({ item }) => (
             <React.Fragment>
@@ -44,24 +44,27 @@ const CredentialsScreen = ({
                 <SafeAreaView>
                   <TouchableOpacity
                     onPress={() =>
+                      
                       navigation.navigate(ROUTE_NAMES.CREDENTIAL_DETAILS, {
-                        cred: item,
+                        msg: { data: { credential: item }},
                       })
                     }
                   >
                     <Image source={item.alias === 'DISCORD HANDLE' ? discordLogo : credLogo} style={styles.credLogoStyle} />
+                    {/* <Image source={item.image_url} style={styles.credLogoStyle} /> */}
+
                   </TouchableOpacity>
                 </SafeAreaView>
                 <SafeAreaView style={styles.container}>
                   <List.Item
-                    title={item.alias}
+                    title={item.id}
                     titleNumberOfLines={1}
                     titleStyle={styles.clickableListTitle}
                     descriptionStyle={styles.listDescription}
                     descriptionNumberOfLines={1}
                     onPress={() =>
                       navigation.navigate(ROUTE_NAMES.CREDENTIAL_DETAILS, {
-                        cred: item,
+                        msg: { data: { credential: item }},
                       })
                     }
                   />
