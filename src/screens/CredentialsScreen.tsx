@@ -50,8 +50,7 @@ const CredentialsScreen = ({
                       })
                     }
                   >
-                    <Image source={item.alias === 'DISCORD HANDLE' ? discordLogo : credLogo} style={styles.credLogoStyle} />
-                    {/* <Image source={item.image_url} style={styles.credLogoStyle} /> */}
+                    <Image source={{uri: item.image_url} }style={styles.credLogoStyle} />
 
                   </TouchableOpacity>
                 </SafeAreaView>
