@@ -74,7 +74,7 @@ export default function Routes() {
         message: addMsgMetadata(
           contact._id,
           'RootsIDClient',
-          `You have issued a verifiable credential!`,
+          `You have been issued a verifiable credential!`,
           MessageType.CREDENTIAL_OFFER,
           false,
           { credential: {
