@@ -109,7 +109,7 @@ export default function CredentialDetailScreen({
             iconColor="white"
             style={{ borderWidth: 1, borderColor: "#FFA149", borderRadius: 10 }}
             onPress={() =>
-              goToShowQrCode(navigation, cred)
+              goToShowQrCode(navigation, JSON.stringify(cred))
             }
           />
         </View>
