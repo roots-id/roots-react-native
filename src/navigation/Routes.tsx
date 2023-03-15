@@ -99,8 +99,6 @@ export default function Routes() {
     };
     FakeConnection();
   }, []);
-  setLoggedIn(true);
-  }, []);
 
   return (
     <AuthContext.Provider value={authContext}>
