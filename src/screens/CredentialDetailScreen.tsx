@@ -51,7 +51,7 @@ export default function CredentialDetailScreen({
   const handleAccept =  async () => {
     //set is_offer if cred to false using spread operator
     const updatedCred = { ...cred, is_offer: 'Accepted' };
-    // dispatch(acceptCredentialOffer(updatedCred));
+    dispatch(acceptCredentialOffer(updatedCred));
     setCred(updatedCred);
     console.log('updated cred', updatedCred)
   
