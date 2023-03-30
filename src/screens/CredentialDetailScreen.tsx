@@ -108,7 +108,7 @@ export default function CredentialDetailScreen({
             renderItem={(item) => {
               return (
                 <ScrollView style={styles.scrollableModal}>
-                  <Text style={{ color: "black" }}>
+                  <Text style={{ color: "white" }}>
                     {item.item[0] + ": " + item.item[1]}
                   </Text>
                 </ScrollView>
