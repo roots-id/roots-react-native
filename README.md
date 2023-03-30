@@ -2,6 +2,5 @@
 experimental project to modernize roots-react-native architecture
 
 ## Getting started using your mac
-```rm -Rf node_modules;arch -x86_64 yarn cache clean;arch -x86_64 yarn install;```
-Then
-```yarn ios```
+* For now see the ios folder, DEV.md
+* Soon we will post instructions for running android
