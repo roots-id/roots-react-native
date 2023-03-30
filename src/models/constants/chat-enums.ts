@@ -25,5 +25,6 @@ export enum MessageType {
 
 
   CREDENTIAL_OFFER = 'CREDENTIAL_OFFER',
+  CREDENTIAL_VIEW = 'CREDENTIAL_VIEW',
   
 }

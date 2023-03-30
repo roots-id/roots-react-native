@@ -9,12 +9,12 @@ import {
   Reply,
   User,
 } from 'react-native-gifted-chat';
-
+import { handleUserInput } from '../events'
 import {
   renderInputToolbar,
-      renderBubble,
-      renderComposer,
-      renderSend,
+  renderBubble,
+  renderComposer,
+  renderSend,
 } from "../components/gifted-chat";
 import * as models from '../models';;
 import { styles } from '../styles/styles';
@@ -73,26 +73,26 @@ export default function ChatScreen({
     if (replies) {
       for (const reply of replies) {
         if (reply.value.endsWith(MessageType.CRED_VIEW)) {
-            console.log('ChatScreen - quick reply view issued credential');
-            console.log("currentChat", currentChat)
-            const msgCurrentChat = currentChat?.messages.find(
-              (message) => message._id === reply.messageId
-            );
-            navigation.navigate(ROUTE_NAMES.CREDENTIAL_DETAILS, {
-              // cred: msgCurrentChat?.data?.credential,
-              msg: msgCurrentChat
-            });
-        } 
+          console.log('ChatScreen - quick reply view issued credential');
+          console.log("currentChat", currentChat)
+          const msgCurrentChat = currentChat?.messages.find(
+            (message) => message._id === reply.messageId
+          );
+          navigation.navigate(ROUTE_NAMES.CREDENTIAL_DETAILS, {
+            // cred: msgCurrentChat?.data?.credential,
+            msg: msgCurrentChat
+          });
+        }
         else if (reply.value.startsWith(MessageType.ISSUED_CREDENTIAL)) {
-            console.log('ChatScreen - quick reply view credential');
-            const msgCurrentChat = currentChat?.messages.find(
-              (message) => message._id === reply.messageId
-            );
-            navigation.navigate(ROUTE_NAMES.CREDENTIAL_DETAILS, {
-              cred: msgCurrentChat?.data?.credential,
-              msg: msgCurrentChat
-            });
-        } 
+          console.log('ChatScreen - quick reply view credential');
+          const msgCurrentChat = currentChat?.messages.find(
+            (message) => message._id === reply.messageId
+          );
+          navigation.navigate(ROUTE_NAMES.CREDENTIAL_DETAILS, {
+            cred: msgCurrentChat?.data?.credential,
+            msg: msgCurrentChat
+          });
+        }
         else {
           console.log(
             'ChatScreen - reply value not recognized, was',
@@ -132,20 +132,11 @@ export default function ChatScreen({
   //     return <Loading />;
   //   }
 
-  const onSend = useCallback((messages = []) => {
-    messages.forEach((message) => {
-      dispatch(
-        sendMessageToChat({
-          senderId: currentUser?._id,
-          chatId: currentChat?._id,
-          message: message.text,
-          type: MessageType.TEXT
-        })
-      );
+  const onSendNow = useCallback((messages: any, dispatch: any, currentChat: any) => {
+    messages.forEach((message: any) => {
+      handleUserInput(message, dispatch, currentChat);
     });
-    // setMessages((previousMessages) =>
-    //   GiftedChat.append(previousMessages, messages)
-    // );
+
   }, []);
 
   return (
@@ -158,14 +149,14 @@ export default function ChatScreen({
           return a.createdAt < b.createdAt ? -1 : 1;
         })}
         placeholder={'Tap to type...'}
-        onSend={onSend}
+        onSend={messages => onSendNow(messages, dispatch, currentChat)}
         user={{
           _id: currentUser._id,
           name: currentUser.displayName,
           avatar: currentUser.displayPictureUrl,
         }}
-        showUserAvatar={ false }
-        renderUsernameOnMessage={ true }
+        showUserAvatar={false}
+        renderUsernameOnMessage={true}
         parsePatterns={(linkStyle) => [
           {
             type: 'url',

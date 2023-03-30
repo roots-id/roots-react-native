@@ -44,7 +44,19 @@ function addQuickReply(msg: message) {
       ],
     };
   }
-
+  if (msg.type === MessageType.CREDENTIAL_VIEW) {
+    msg.quickReplies = {
+      type: 'radio',
+      keepIt: true,
+      values: [
+        {
+          title: 'View',
+          value: MessageType.CRED_VIEW,
+          messageId: msg._id,
+        },
+      ],
+    };
+  }
 
   // if (msg.type === MessageType.PROMPT_PUBLISH) {
   //   msg.quickReplies = {

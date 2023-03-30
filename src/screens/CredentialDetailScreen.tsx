@@ -50,7 +50,7 @@ export default function CredentialDetailScreen({
 
   const handleAccept =  async () => {
     //set is_offer if cred to false using spread operator
-    const updatedCred = { ...cred, is_offer: 'Accepted' };
+    const updatedCred = { ...cred, status: 'Accepted', is_offer: false };
     dispatch(addCredentialToList(updatedCred));
     setCred(updatedCred);
     console.log('updated cred', updatedCred)
@@ -63,7 +63,7 @@ export default function CredentialDetailScreen({
 
   const handleDeny = () => {
     //set is_offer if cred to false using spread operator
-    const updatedCred = { ...cred, is_offer: 'Denied' };
+    const updatedCred = { ...cred, status: 'Denied',is_offer: false };
     // dispatch(denyCredentialOffer(updatedCred));
     setCred(updatedCred);
     
@@ -149,11 +149,15 @@ export default function CredentialDetailScreen({
             </Button>
           </View>
         </View>
-      ) : 
+      ) : (
+        typeof(cred.status) === typeof('') ? (
       <View style={{ marginLeft: "10%", flexDirection: "row", alignItems: "center" }}>
-        <Text style={{ color: "white" , fontSize: 20, fontWeight: 'bold'}}>Offer Status : {cred.is_offer}</Text>
+        <Text style={{ color: "white" , fontSize: 20, fontWeight: 'bold'}}>Offer Status : {cred.status}</Text>
       </View>
-      
+        ) : (<View style={{ marginLeft: "10%", flexDirection: "row", alignItems: "center" }}>
+        <Text style={{ color: "white" , fontSize: 20, fontWeight: 'bold'}}> Your Credential is been issued</Text>
+      </View>)
+      )
       
       }
       <View
