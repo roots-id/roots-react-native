@@ -10,6 +10,11 @@ import reduxStore from './src/store';
 LogBox.ignoreLogs(['Warning: ...']); // Ignore log notification by message
 LogBox.ignoreAllLogs(); //Ignore all log notifications
 
+import '@sinonjs/text-encoding'
+import 'react-native-get-random-values'
+import '@ethersproject/shims'
+
+
 export const { store, persistor } = reduxStore();
 
 export default function App() {

@@ -9,7 +9,7 @@ import ReactNative, {
   Platform, TouchableOpacity, Linking,
 } from 'react-native';
 import { IconButton } from 'react-native-paper';
-const { DIDFunctionalities } = ReactNative.NativeModules;
+// const { DIDFunctionalities } = ReactNative.NativeModules;
 
 import { faker } from '@faker-js/faker';
 import React from 'react';
