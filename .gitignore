@@ -1,3 +1,3 @@
 ios/Pods/*
 node_modules/
-android/*
+vendor/bundle/.*
