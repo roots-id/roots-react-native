@@ -1,3 +1,7 @@
 ios/Pods/*
 node_modules/
 vendor/bundle/.*
+android/app/build/intermediates/
+android/app/build/generated/
+android/app/build/outputs/
+android/app/build/tmp/
