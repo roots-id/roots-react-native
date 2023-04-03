@@ -4104,8 +4104,8 @@ did-jwt@^6.11.0, did-jwt@^6.3.0, did-jwt@^6.9.0:
     uint8arrays "^3.0.0"
 
 "did-peer-plugin@https://github.com/roots-id/didpeer-plugin":
-  version "1.0.0"
-  resolved "https://github.com/roots-id/didpeer-plugin#90369ef153dc4d16b0299220da8f21f2f80b28d8"
+  version "1.0.1"
+  resolved "https://github.com/roots-id/didpeer-plugin#3dfaee89a5ec9e0462783882c31aaf1377e92d1b"
   dependencies:
     "@veramo/core" "^4.0.0"
     "@veramo/did-manager" "^4.0.0"
