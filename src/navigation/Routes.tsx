@@ -106,55 +106,62 @@ export default function Routes() {
     // FakeConnection();
 
     const createIdentifier = async () => {
-      const _id = await veramoagent.didManagerCreate({
+      const did_key_local_id = await veramoagent.didManagerCreate({
         provider: 'did:key',
+        type: 'X25519',
       })
-      console.log('ChatScreen - created identifier for ed25519 key', _id);
+      // console.log('ChatScreen - created identifier for ed25519 key', did_key_local_id);
+      console.log('ChatScreen - created did', did_key_local_id.did);
+
       const mediator = await veramoagent.resolveDid({ didUrl: 'did:web:dev-didcomm-mediator.herokuapp.com' })
-      // console.log('ChatScreen - resolved did mediato identifier', JSON.stringify(mediator, null, 2));
+      console.log('ChatScreen - resolved did mediato identifier', JSON.stringify(mediator, null, 2));
 
-      const recipient = await veramoagent.didManagerCreate({
-        provider: 'did:peer',
-        options: {
-          "num_algo": 2,
-          "service": {
-            "id": "#didcommmessaging-0",
-            "type": "DIDCommMessaging",
-            "serviceEndpoint": "http://localhost:3000",
-            "description": "a local endpoint"
-          }
-        }
-      })
-      console.log('ChatScreen - created identifier for did peer', recipient);
-      const peer_did = await veramoagent.resolveDid({ didUrl: recipient.did })
+      // const recipient = await veramoagent.didManagerCreate({
+      //   provider: 'did:peer',
+      //   options: {
+      //     "num_algo": 2,
+      //     "service": {
+      //       "id": "#didcommmessaging-0",
+      //       "type": "DIDCommMessaging",
+      //       "serviceEndpoint": "http://localhost:3000",
+      //       "description": "a local endpoint"
+      //     }
+      //   }
+      // })
+      // console.log('ChatScreen - resolved did peer identifier', JSON.stringify(recipient, null, 2));
+      // const peer_did = await veramoagent.resolveDid({ didUrl: recipient.did })
 
 
-      console.log('ChatScreen - resolved did peer identifier', JSON.stringify(peer_did, null, 2));
+      // console.log('ChatScreen - resolved did peer identifier', JSON.stringify(peer_did, null, 2));
 
       // const message = {
       //   type: 'https://didcomm.org/basicmessage/2.0/message',
-      //   to: _id.did,
-      //   from: recipient.did,
+      //   to: mediator.didDocument.id,
+      //   from: did_key_local_id.did,
       //   id: '123',
       //   body: { content: 'Hello veramo from roots' },
       // }
+      // console.log('ChatScreen - message', message);
       // const packedMessage = await veramoagent.packDIDCommMessage({
       //   packing: 'authcrypt',
-      //   message,
-      //   keyRef: recipient.did,
+      //   message
       // })
       // console.log('ChatScreen - packed message', packedMessage);
 
-      // const trustPingMessage = createTrustPingMessage(recipient.did, mediator.did)
-      // const packedTrustPingMessage = await veramoagent.packDIDCommMessage({
-      //   packing: 'authcrypt',
-      //   message: trustPingMessage,
-      // })
-      // await veramoagent.sendDIDCommMessage({
-      //   messageId: trustPingMessage.id,
-      //   packedTrustPingMessage,
-      //   recipientDidUrl: mediator.did,
-      // })
+      const trustPingMessage = createTrustPingMessage(did_key_local_id.did, mediator.didDocument.id)
+      console.log('ChatScreen - trustPingMessage', trustPingMessage);
+      const packedTrustPingMessage = await veramoagent.packDIDCommMessage({
+        packing: 'authcrypt',
+        message: trustPingMessage,
+      })
+      console.log('ChatScreen - packedTrustPingMessage', packedTrustPingMessage.message);
+      let res = await veramoagent.sendDIDCommMessage({
+        packedTrustPingMessage,
+        messageId: trustPingMessage.id,
+        recipientDidUrl: mediator.didDocument.id,
+      })
+      console.log('ChatScreen - trustPingMessage response', res.data);
+
 
       //// https://github.com/uport-project/veramo/blob/next/packages/did-comm/src/__tests__/messagepickup-message-handler.test.ts
       // const mediateRequestMessage = createMediateRequestMessage(recipient.did, mediator.did)
