@@ -13,7 +13,7 @@ import { initiateChat, addMessage } from '../store/slices/chat';
 import { veramoagent } from '../../setup'
 import { sendMessageToChat } from '../store/thunks/chat';
 
-import { createMediateRequestMessage } from '@veramo/did-comm/src/protocols/coordinate-mediation-message-handler';
+import { createMediateRequestMessage , pickup} from '../utils/didcomm-mediation';
 import { createTrustPingMessage } from '@veramo/did-comm/src/protocols/trust-ping-message-handler';
 import { IDIDCommMessage } from '@veramo/did-comm/';
 import { STATUS_REQUEST_MESSAGE_TYPE, DELIVERY_REQUEST_MESSAGE_TYPE } from '@veramo/did-comm/src/protocols/messagepickup-message-handler';
@@ -149,7 +149,7 @@ export default function Routes() {
       // })
       // console.log('ChatScreen - packed message', packedMessage);
 
-      const trustPingMessage = createTrustPingMessage(holder_local_did_key.did, mediator_peer.didDocument.id)
+      const trustPingMessage = createMediateRequestMessage(holder_local_did_peer.did, mediator_peer.didDocument.id)
       // console.log('ChatScreen - trustPingMessage', trustPingMessage);
       const packedTrustPingMessage = await veramoagent.packDIDCommMessage({
         packing: 'authcrypt',
@@ -157,17 +157,15 @@ export default function Routes() {
       })
       // console.log('ChatScreen - packedTrustPingMessage', packedTrustPingMessage.message);
       let res = await veramoagent.sendDIDCommMessage({
-        packedTrustPingMessage,
+        packedMessage: packedTrustPingMessage,
         messageId: trustPingMessage.id,
         recipientDidUrl: mediator_peer.didDocument.id,
       })
-      // let res2 = await fetch(mediator_peer.didDocument.service[0].serviceEndpoint, {
-      //   method: 'POST',
 
-      //   body: JSON.stringify(packedTrustPingMessage.message),
-      // })
+      console.log('ChatScreen - createMediateRequestMessage response', res);
+      //wait 5 seconds
+      pickup(veramoagent, holder_local_did_peer.did, 'did:peer:2.Ez6LSmbbJFxvsueDc6o9zEnHgkZi4ps9cPh523P2WcwgWsJvC.Vz6MkjfvhjYpoBJoyeLJBk4nHCQh6QxH1NS37iNkupoTTMuji.SeyJpZCI6IndoYXRldmVyMSIsInQiOiJkbSIsInMiOiJodHRwczovL2Rldi1kaWRjb21tLW1lZGlhdG9yLmhlcm9rdWFwcC5jb20vbWVzc2FnaW5nIn0')
 
-      console.log('ChatScreen - trustPingMessage response', res);
 
 
       //// https://github.com/uport-project/veramo/blob/next/packages/did-comm/src/__tests__/messagepickup-message-handler.test.ts
