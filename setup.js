@@ -28,9 +28,9 @@ import { DIDResolverPlugin } from '@veramo/did-resolver'
 
 import { Resolver } from 'did-resolver'
 
-import { getResolver as PeerDidResolver } from 'peer-did-resolver'
+import { getResolver as PeerDidResolver } from '@veramo/did-provider-peer'
 
-import { PeerDIDProvider } from 'did-peer-plugin'
+import { PeerDIDProvider } from '@veramo/did-provider-peer'
 
 import { CredentialPlugin, ICredentialIssuer, ICredentialVerifier } from '@veramo/credential-w3c'
 
@@ -41,6 +41,7 @@ import {DIDCommHttpTransport,
   TrustPingMessageHandler,
   PickupRecipientMessageHandler } from '@veramo/did-comm'
   
+import { SaveMessageHandler } from './saveMessageHandler'
 import {MessageHandler} from '@veramo/message-handler'
 
 const DB_ENCRYPTION_KEY = '588a3b46021c1f38c7f20ec32a0063350d3c35f4225baa5a4d36e9073e044f3a'
@@ -96,6 +97,7 @@ export const veramoagent = createAgent({
         new CoordinateMediationRecipientMessageHandler(),
         new TrustPingMessageHandler(),
         new PickupRecipientMessageHandler(),
+        new SaveMessageHandler()
       ],
     }),
   ]
