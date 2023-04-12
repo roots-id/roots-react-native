@@ -113,7 +113,7 @@ export default function Routes() {
           service: {
             id: "#didcomm-0",
             type: "DIDCommMessaging",
-            serviceEndpoint: "https://47b5-2a01-11-9210-5210-d860-93a4-fdd6-90aa.eu.ngrok.io/messaging",
+            serviceEndpoint: "did:peer:2.Ez6LSepdJqu5PgwoEDSQyVqbhQMkkwZGuEivGUBcTPoY5GcjV.Vz6MkemzsnRPw79AisytJAUZ21Xu5v1NzL7dmPPuAXd4bjmZR.SeyJpZCI6IiNkaWRjb21tLTAiLCJ0IjoiZG0iLCJzIjoiaHR0cHM6Ly80N2I1LTJhMDEtMTEtOTIxMC01MjEwLWQ4NjAtOTNhNC1mZGQ2LTkwYWEuZXUubmdyb2suaW8vbWVzc2FnaW5nIiwiZGVzY3JpcHRpb24iOiJhIERJRENPTU0gVjIgZW5kcG9pbnQgaW4gdmVyYW1vIHRoYXQgc3VwcG9ydHMgZGlkOnBlZXIgIn0",
             description: "a DIDCOMM V2 endpoint in veramo that supports did:peer "
           }
         }
@@ -149,22 +149,30 @@ export default function Routes() {
       // })
       // console.log('ChatScreen - packed message', packedMessage);
 
-      const trustPingMessage = createMediateRequestMessage(holder_local_did_peer.did, mediator_peer.didDocument.id)
+      const mediateRequestMessage = createMediateRequestMessage(holder_local_did_peer.did, 'did:peer:2.Ez6LSepdJqu5PgwoEDSQyVqbhQMkkwZGuEivGUBcTPoY5GcjV.Vz6MkemzsnRPw79AisytJAUZ21Xu5v1NzL7dmPPuAXd4bjmZR.SeyJpZCI6IiNkaWRjb21tLTAiLCJ0IjoiZG0iLCJzIjoiaHR0cHM6Ly80N2I1LTJhMDEtMTEtOTIxMC01MjEwLWQ4NjAtOTNhNC1mZGQ2LTkwYWEuZXUubmdyb2suaW8vbWVzc2FnaW5nIiwiZGVzY3JpcHRpb24iOiJhIERJRENPTU0gVjIgZW5kcG9pbnQgaW4gdmVyYW1vIHRoYXQgc3VwcG9ydHMgZGlkOnBlZXIgIn0')
       // console.log('ChatScreen - trustPingMessage', trustPingMessage);
-      const packedTrustPingMessage = await veramoagent.packDIDCommMessage({
+      const packedmediateRequestMessage = await veramoagent.packDIDCommMessage({
         packing: 'authcrypt',
-        message: trustPingMessage,
+        message: mediateRequestMessage,
       })
       // console.log('ChatScreen - packedTrustPingMessage', packedTrustPingMessage.message);
       let res = await veramoagent.sendDIDCommMessage({
-        packedMessage: packedTrustPingMessage,
-        messageId: trustPingMessage.id,
-        recipientDidUrl: mediator_peer.didDocument.id,
+        packedMessage: packedmediateRequestMessage,
+        messageId: mediateRequestMessage.id,
+        recipientDidUrl: 'did:peer:2.Ez6LSepdJqu5PgwoEDSQyVqbhQMkkwZGuEivGUBcTPoY5GcjV.Vz6MkemzsnRPw79AisytJAUZ21Xu5v1NzL7dmPPuAXd4bjmZR.SeyJpZCI6IiNkaWRjb21tLTAiLCJ0IjoiZG0iLCJzIjoiaHR0cHM6Ly80N2I1LTJhMDEtMTEtOTIxMC01MjEwLWQ4NjAtOTNhNC1mZGQ2LTkwYWEuZXUubmdyb2suaW8vbWVzc2FnaW5nIiwiZGVzY3JpcHRpb24iOiJhIERJRENPTU0gVjIgZW5kcG9pbnQgaW4gdmVyYW1vIHRoYXQgc3VwcG9ydHMgZGlkOnBlZXIgIn0',
       })
 
       console.log('ChatScreen - createMediateRequestMessage response', res);
       //wait 5 seconds
-      pickup(veramoagent, holder_local_did_peer.did, 'did:peer:2.Ez6LSmbbJFxvsueDc6o9zEnHgkZi4ps9cPh523P2WcwgWsJvC.Vz6MkjfvhjYpoBJoyeLJBk4nHCQh6QxH1NS37iNkupoTTMuji.SeyJpZCI6IndoYXRldmVyMSIsInQiOiJkbSIsInMiOiJodHRwczovL2Rldi1kaWRjb21tLW1lZGlhdG9yLmhlcm9rdWFwcC5jb20vbWVzc2FnaW5nIn0')
+      await new Promise((resolve) => setTimeout(resolve, 20000));
+      pickup(veramoagent, holder_local_did_peer.did, 'did:peer:2.Ez6LSepdJqu5PgwoEDSQyVqbhQMkkwZGuEivGUBcTPoY5GcjV.Vz6MkemzsnRPw79AisytJAUZ21Xu5v1NzL7dmPPuAXd4bjmZR.SeyJpZCI6IiNkaWRjb21tLTAiLCJ0IjoiZG0iLCJzIjoiaHR0cHM6Ly80N2I1LTJhMDEtMTEtOTIxMC01MjEwLWQ4NjAtOTNhNC1mZGQ2LTkwYWEuZXUubmdyb2suaW8vbWVzc2FnaW5nIiwiZGVzY3JpcHRpb24iOiJhIERJRENPTU0gVjIgZW5kcG9pbnQgaW4gdmVyYW1vIHRoYXQgc3VwcG9ydHMgZGlkOnBlZXIgIn0')
+      await new Promise((resolve) => setTimeout(resolve, 20000));
+      pickup(veramoagent, holder_local_did_peer.did, 'did:peer:2.Ez6LSepdJqu5PgwoEDSQyVqbhQMkkwZGuEivGUBcTPoY5GcjV.Vz6MkemzsnRPw79AisytJAUZ21Xu5v1NzL7dmPPuAXd4bjmZR.SeyJpZCI6IiNkaWRjb21tLTAiLCJ0IjoiZG0iLCJzIjoiaHR0cHM6Ly80N2I1LTJhMDEtMTEtOTIxMC01MjEwLWQ4NjAtOTNhNC1mZGQ2LTkwYWEuZXUubmdyb2suaW8vbWVzc2FnaW5nIiwiZGVzY3JpcHRpb24iOiJhIERJRENPTU0gVjIgZW5kcG9pbnQgaW4gdmVyYW1vIHRoYXQgc3VwcG9ydHMgZGlkOnBlZXIgIn0')
+      await new Promise((resolve) => setTimeout(resolve, 20000));
+      pickup(veramoagent, holder_local_did_peer.did, 'did:peer:2.Ez6LSepdJqu5PgwoEDSQyVqbhQMkkwZGuEivGUBcTPoY5GcjV.Vz6MkemzsnRPw79AisytJAUZ21Xu5v1NzL7dmPPuAXd4bjmZR.SeyJpZCI6IiNkaWRjb21tLTAiLCJ0IjoiZG0iLCJzIjoiaHR0cHM6Ly80N2I1LTJhMDEtMTEtOTIxMC01MjEwLWQ4NjAtOTNhNC1mZGQ2LTkwYWEuZXUubmdyb2suaW8vbWVzc2FnaW5nIiwiZGVzY3JpcHRpb24iOiJhIERJRENPTU0gVjIgZW5kcG9pbnQgaW4gdmVyYW1vIHRoYXQgc3VwcG9ydHMgZGlkOnBlZXIgIn0')
+      await new Promise((resolve) => setTimeout(resolve, 20000));
+      pickup(veramoagent, holder_local_did_peer.did, 'did:peer:2.Ez6LSepdJqu5PgwoEDSQyVqbhQMkkwZGuEivGUBcTPoY5GcjV.Vz6MkemzsnRPw79AisytJAUZ21Xu5v1NzL7dmPPuAXd4bjmZR.SeyJpZCI6IiNkaWRjb21tLTAiLCJ0IjoiZG0iLCJzIjoiaHR0cHM6Ly80N2I1LTJhMDEtMTEtOTIxMC01MjEwLWQ4NjAtOTNhNC1mZGQ2LTkwYWEuZXUubmdyb2suaW8vbWVzc2FnaW5nIiwiZGVzY3JpcHRpb24iOiJhIERJRENPTU0gVjIgZW5kcG9pbnQgaW4gdmVyYW1vIHRoYXQgc3VwcG9ydHMgZGlkOnBlZXIgIn0')
+
 
 
 
