@@ -14,9 +14,9 @@ import { veramoagent } from '../../setup'
 import { sendMessageToChat } from '../store/thunks/chat';
 
 import { createMediateRequestMessage } from '@veramo/did-comm/src/protocols/coordinate-mediation-message-handler';
-import {createTrustPingMessage } from '@veramo/did-comm/src/protocols/trust-ping-message-handler';
-import {IDIDCommMessage } from '@veramo/did-comm/';
-import {STATUS_REQUEST_MESSAGE_TYPE, DELIVERY_REQUEST_MESSAGE_TYPE} from '@veramo/did-comm/src/protocols/messagepickup-message-handler';
+import { createTrustPingMessage } from '@veramo/did-comm/src/protocols/trust-ping-message-handler';
+import { IDIDCommMessage } from '@veramo/did-comm/';
+import { STATUS_REQUEST_MESSAGE_TYPE, DELIVERY_REQUEST_MESSAGE_TYPE } from '@veramo/did-comm/src/protocols/messagepickup-message-handler';
 import { QUEUE_MESSAGE_TYPE } from '@veramo/did-comm/src/protocols/routing-message-handler'
 const localStorageService = new LocalStorageService();
 
@@ -106,31 +106,32 @@ export default function Routes() {
     // FakeConnection();
 
     const createIdentifier = async () => {
-      const did_key_local_id = await veramoagent.didManagerCreate({
-        provider: 'did:key',
-        type: 'X25519',
+      const holder_local_did_peer = await veramoagent.didManagerCreate({
+        provider: 'did:peer',
+        options: {
+          num_algo: 2,
+          service: {
+            id: "#didcomm-0",
+            type: "DIDCommMessaging",
+            serviceEndpoint: "https://47b5-2a01-11-9210-5210-d860-93a4-fdd6-90aa.eu.ngrok.io/messaging",
+            description: "a DIDCOMM V2 endpoint in veramo that supports did:peer "
+          }
+        }
       })
       // console.log('ChatScreen - created identifier for ed25519 key', did_key_local_id);
-      console.log('ChatScreen - created did', did_key_local_id.did);
+      console.log('ChatScreen - created did', holder_local_did_peer.did);
+
+
+      const holder_local_did_key = await veramoagent.didManagerCreate({
+        provider: 'did:key'
+      })
 
       const mediator = await veramoagent.resolveDid({ didUrl: 'did:web:dev-didcomm-mediator.herokuapp.com' })
-      console.log('ChatScreen - resolved did mediato identifier', JSON.stringify(mediator, null, 2));
+      const mediator_peer = await veramoagent.resolveDid({ didUrl: 'did:peer:2.Ez6LSmbbJFxvsueDc6o9zEnHgkZi4ps9cPh523P2WcwgWsJvC.Vz6MkjfvhjYpoBJoyeLJBk4nHCQh6QxH1NS37iNkupoTTMuji.SeyJpZCI6IndoYXRldmVyMSIsInQiOiJkbSIsInMiOiJodHRwczovL2Rldi1kaWRjb21tLW1lZGlhdG9yLmhlcm9rdWFwcC5jb20vbWVzc2FnaW5nIn0' })
+      console.log('mediator endpoint', mediator_peer.didDocument.service[0].serviceEndpoint)
 
-      // const recipient = await veramoagent.didManagerCreate({
-      //   provider: 'did:peer',
-      //   options: {
-      //     "num_algo": 2,
-      //     "service": {
-      //       "id": "#didcommmessaging-0",
-      //       "type": "DIDCommMessaging",
-      //       "serviceEndpoint": "http://localhost:3000",
-      //       "description": "a local endpoint"
-      //     }
-      //   }
-      // })
-      // console.log('ChatScreen - resolved did peer identifier', JSON.stringify(recipient, null, 2));
-      // const peer_did = await veramoagent.resolveDid({ didUrl: recipient.did })
-
+      // const mediator = await veramoagent.resolveDid({ didUrl: 'did:peer:2.Ez6LScNquUG6jLxNvB1E5jAhBGXnDCVx3hXS7HoA751En5F3W.Vz6MkmtkfnmeFECEQ73sv6RPpsrUrR7DsMuDSwVYwceHCgSon.SeyJpZCI6IiNkaWRjb21tLTAiLCJ0IjoiZG0iLCJzIjoiaHR0cHM6Ly80N2I1LTJhMDEtMTEtOTIxMC01MjEwLWQ4NjAtOTNhNC1mZGQ2LTkwYWEuZXUubmdyb2suaW8vbWVzc2FnaW5nIiwiZGVzY3JpcHRpb24iOiJhIERJRENPTU0gVjIgZW5kcG9pbnQgaW4gdmVyYW1vIHRoYXQgc3VwcG9ydHMgZGlkOnBlZXIgIn0' })
+      // console.log('ChatScreen - resolved did mediato identifier', JSON.stringify(mediator_peer, null, 2));
 
       // console.log('ChatScreen - resolved did peer identifier', JSON.stringify(peer_did, null, 2));
 
@@ -148,19 +149,25 @@ export default function Routes() {
       // })
       // console.log('ChatScreen - packed message', packedMessage);
 
-      const trustPingMessage = createTrustPingMessage(did_key_local_id.did, mediator.didDocument.id)
-      console.log('ChatScreen - trustPingMessage', trustPingMessage);
+      const trustPingMessage = createTrustPingMessage(holder_local_did_key.did, mediator_peer.didDocument.id)
+      // console.log('ChatScreen - trustPingMessage', trustPingMessage);
       const packedTrustPingMessage = await veramoagent.packDIDCommMessage({
         packing: 'authcrypt',
         message: trustPingMessage,
       })
-      console.log('ChatScreen - packedTrustPingMessage', packedTrustPingMessage.message);
+      // console.log('ChatScreen - packedTrustPingMessage', packedTrustPingMessage.message);
       let res = await veramoagent.sendDIDCommMessage({
         packedTrustPingMessage,
         messageId: trustPingMessage.id,
-        recipientDidUrl: mediator.didDocument.id,
+        recipientDidUrl: mediator_peer.didDocument.id,
       })
-      console.log('ChatScreen - trustPingMessage response', res.data);
+      // let res2 = await fetch(mediator_peer.didDocument.service[0].serviceEndpoint, {
+      //   method: 'POST',
+
+      //   body: JSON.stringify(packedTrustPingMessage.message),
+      // })
+
+      console.log('ChatScreen - trustPingMessage response', res);
 
 
       //// https://github.com/uport-project/veramo/blob/next/packages/did-comm/src/__tests__/messagepickup-message-handler.test.ts
@@ -174,7 +181,7 @@ export default function Routes() {
       //   packedmediateRequestMessage,
       //   recipientDidUrl: mediator.did,
       // })
-      
+
       // // Send StatusRequest
       // const statusRequestMessage: IDIDCommMessage = {
       //   id: '1234',
